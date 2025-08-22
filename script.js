@@ -16,21 +16,65 @@ document.addEventListener('DOMContentLoaded', function() {
     let waitingAudio = null;
     let gotAudio = null;
     let shuffleAudio = null;
+    let audioContext = null;
+    let userHasInteracted = false;
+
+    // 檢測是否為移動設備
+    function isMobileDevice() {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    }
 
     // 初始化音效
     function initAudio() {
         try {
+            // 創建音頻對象
             waitingAudio = new Audio('sound/waiting.mp3');
             waitingAudio.loop = true;
             waitingAudio.volume = 0.7;
+            waitingAudio.preload = 'auto';
             
             gotAudio = new Audio('sound/got.mp3');
             gotAudio.loop = false;
             gotAudio.volume = 0.8;
+            gotAudio.preload = 'auto';
             
             shuffleAudio = new Audio('sound/shuffle.mp3');
             shuffleAudio.loop = false;
             shuffleAudio.volume = 0.6;
+            shuffleAudio.preload = 'auto';
+
+            // 移動設備特殊處理
+            if (isMobileDevice()) {
+                console.log('檢測到移動設備，設置音頻特殊處理');
+                
+                // 監聽用戶首次交互
+                const enableAudio = () => {
+                    if (!userHasInteracted) {
+                        userHasInteracted = true;
+                        console.log('用戶已交互，啟用音頻');
+                        
+                        // 顯示音頻已啟用的提示（可選）
+                        showAudioEnabledNotification();
+                        
+                        // 預載所有音頻
+                        [waitingAudio, gotAudio, shuffleAudio].forEach(audio => {
+                            if (audio) {
+                                audio.load();
+                                // 短暫播放並立即暫停以解鎖音頻
+                                audio.play().then(() => {
+                                    audio.pause();
+                                    audio.currentTime = 0;
+                                }).catch(e => console.log('音頻預載失敗:', e));
+                            }
+                        });
+                    }
+                };
+
+                // 監聽多種交互事件
+                ['touchstart', 'touchend', 'click', 'keydown'].forEach(event => {
+                    document.addEventListener(event, enableAudio, { once: true, passive: true });
+                });
+            }
             
             console.log('音效初始化成功');
         } catch (error) {
@@ -38,23 +82,41 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // 安全播放音頻的通用函數
+    function safePlayAudio(audio, audioName) {
+        if (!audio) return Promise.resolve();
+        
+        console.log(`嘗試播放${audioName}...`);
+        
+        // 移動設備且用戶未交互時，直接返回
+        if (isMobileDevice() && !userHasInteracted) {
+            console.log(`移動設備未交互，跳過${audioName}播放`);
+            return Promise.resolve();
+        }
+        
+        return audio.play()
+            .then(() => {
+                console.log(`${audioName}播放成功`);
+            })
+            .catch(e => {
+                console.log(`${audioName}播放失敗:`, e);
+                
+                // 如果是移動設備，嘗試在下次用戶交互時播放
+                if (isMobileDevice()) {
+                    const playOnNextInteraction = () => {
+                        audio.play().catch(err => console.log(`延遲播放${audioName}失敗:`, err));
+                    };
+                    
+                    ['touchstart', 'click'].forEach(event => {
+                        document.addEventListener(event, playOnNextInteraction, { once: true, passive: true });
+                    });
+                }
+            });
+    }
+
     // 播放等待音效
     function playWaitingSound() {
-        if (waitingAudio) {
-            console.log('嘗試播放等待音效...');
-            waitingAudio.play()
-                .then(() => {
-                    console.log('等待音效播放成功');
-                })
-                .catch(e => {
-                    console.log('等待音效播放失敗:', e);
-                    // 嘗試用戶交互後播放
-                    document.addEventListener('click', function playOnClick() {
-                        waitingAudio.play().catch(e => console.log('點擊後播放失敗:', e));
-                        document.removeEventListener('click', playOnClick);
-                    }, { once: true });
-                });
-        }
+        safePlayAudio(waitingAudio, '等待音效');
     }
 
     // 停止等待音效
@@ -68,36 +130,45 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 播放完成音效
     function playGotSound() {
-        if (gotAudio) {
-            console.log('嘗試播放完成音效...');
-            gotAudio.play()
-                .then(() => {
-                    console.log('完成音效播放成功');
-                })
-                .catch(e => {
-                    console.log('完成音效播放失敗:', e);
-                    // 嘗試用戶交互後播放
-                    document.addEventListener('click', function playOnClick() {
-                        gotAudio.play().catch(e => console.log('點擊後播放失敗:', e));
-                        document.removeEventListener('click', playOnClick);
-                    }, { once: true });
-                });
-        }
+        safePlayAudio(gotAudio, '完成音效');
     }
 
     // 播放卡片選擇音效
     function playShuffleSound() {
         if (shuffleAudio) {
-            console.log('播放卡片選擇音效');
             shuffleAudio.currentTime = 0; // 重置音效到開始位置
-            shuffleAudio.play()
-                .then(() => {
-                    console.log('卡片選擇音效播放成功');
-                })
-                .catch(e => {
-                    console.log('卡片選擇音效播放失敗:', e);
-                });
+            safePlayAudio(shuffleAudio, '卡片選擇音效');
         }
+    }
+
+    // 顯示音頻已啟用通知
+    function showAudioEnabledNotification() {
+        // 創建一個簡短的通知
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 215, 0, 0.9);
+            color: #333;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            z-index: 10000;
+            transition: opacity 0.3s ease;
+        `;
+        notification.textContent = '🔊 音效已啟用';
+        document.body.appendChild(notification);
+
+        // 3秒後移除通知
+        setTimeout(() => {
+            notification.style.opacity = '0';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
+        }, 3000);
     }
     
     // 占卜問題
