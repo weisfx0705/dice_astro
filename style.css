@@ -18,6 +18,28 @@ body {
     padding: 2rem;
     text-align: center;
     position: relative;
+    min-height: 100vh;
+}
+
+/* 頁面切換樣式 */
+.page {
+    display: none;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.page.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 h1 {
@@ -68,6 +90,143 @@ h2 {
     font-size: 1.2rem;
     margin-bottom: 2rem;
     color: #b0e0e6;
+}
+
+/* 當前問題顯示 */
+.current-question {
+    background: rgba(26, 26, 74, 0.3);
+    border: 2px solid rgba(255, 215, 0, 0.3);
+    border-radius: 15px;
+    padding: 1rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.current-question p {
+    color: #ffd700;
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+.current-question .restart-button {
+    margin: 0;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    min-width: auto;
+}
+
+/* 選中卡牌摘要 */
+.selected-cards-summary {
+    background: rgba(26, 26, 74, 0.3);
+    border: 2px solid rgba(255, 215, 0, 0.3);
+    border-radius: 15px;
+    padding: 1rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.selected-card-item {
+    background: rgba(42, 42, 106, 0.5);
+    border: 1px solid rgba(255, 215, 0, 0.5);
+    border-radius: 10px;
+    padding: 1rem;
+    min-width: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.card-image-small {
+    width: 80px;
+    height: 80px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 8px;
+    border: 2px solid rgba(255, 215, 0, 0.5);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.5s ease;
+}
+
+.card-image-small.show {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.card-info {
+    text-align: center;
+}
+
+.card-label {
+    color: #b0e0e6;
+    font-weight: bold;
+    margin-right: 0.5rem;
+}
+
+.selected-card-item span:last-child {
+    color: #ffd700;
+    font-weight: bold;
+}
+
+/* 頁面導航按鈕 */
+.page-navigation {
+    margin-top: 3rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.back-button, .next-button, .restart-button {
+    padding: 1rem 2rem;
+    border: 2px solid;
+    border-radius: 30px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Microsoft JhengHei', Arial, sans-serif;
+    min-width: 150px;
+}
+
+.next-button {
+    background: rgba(26, 26, 74, 0.7);
+    color: #ffd700;
+    border-color: #ffd700;
+}
+
+.next-button:hover:not(:disabled) {
+    background: rgba(42, 42, 106, 0.8);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+    transform: translateY(-2px);
+}
+
+.next-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.restart-button {
+    background: rgba(74, 26, 26, 0.7);
+    color: #ff6b6b;
+    border-color: #ff6b6b;
+}
+
+.restart-button:hover {
+    background: rgba(106, 42, 42, 0.8);
+    box-shadow: 0 0 15px rgba(255, 107, 107, 0.3);
+    transform: translateY(-2px);
 }
 
 /* 設置按鈕和面板樣式 */
@@ -238,8 +397,7 @@ h2 {
 
 .card-section {
     display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
+    justify-content: center;
     margin-bottom: 2rem;
 }
 
@@ -320,21 +478,26 @@ h2 {
     text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
 }
 
-.results {
-    margin-top: 2rem;
-    padding: 2rem;
-    background: rgba(26, 26, 74, 0.5);
+/* 女巫聯繫頁面樣式 */
+.witch-connecting-container {
+    background: rgba(26, 26, 74, 0.3);
     background-image: url('witch.png');
     background-size: cover;
-    background-position: top;
+    background-position: center -1%;
     background-repeat: no-repeat;
+    border: 2px solid rgba(255, 215, 0, 0.3);
     border-radius: 15px;
-    display: none;
-    box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+    padding: 2rem;
+    margin: 2rem 0;
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
     position: relative;
+    height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.results::before {
+.witch-connecting-container::before {
     content: '';
     position: absolute;
     top: 0;
@@ -346,81 +509,62 @@ h2 {
     z-index: 1;
 }
 
-.results h2,
-.results p {
+.witch-connecting {
+    text-align: center;
+    color: #b0e0e6;
+    font-size: 1.5rem;
+    font-weight: bold;
+    letter-spacing: 1px;
     position: relative;
     z-index: 2;
 }
 
-#result-text {
-    font-size: 1.2rem;
-    line-height: 1.6;
+.witch-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    animation: float 3s infinite ease-in-out;
+}
+
+.connecting-dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
     margin-top: 1rem;
-    color: #e6e6fa;
 }
 
-.witch-connecting {
-    margin-top: 1.5rem;
-    font-style: italic;
-    color: #b0e0e6;
-    display: none;
-    animation: witch-glow 2s infinite ease-in-out;
-    font-weight: bold;
-    letter-spacing: 1px;
-    padding: 10px;
-    position: relative;
-    font-size: 1.5rem;
-    text-align: center;
+.dot {
+    width: 12px;
+    height: 12px;
+    background: #ffd700;
+    border-radius: 50%;
+    animation: dot-pulse 1.5s infinite ease-in-out;
 }
 
-.witch-connecting::before,
-.witch-connecting::after {
-    content: "✦";
-    position: absolute;
-    font-size: 1.2rem;
-    color: #ffd700;
-    animation: float 3s infinite ease-in-out alternate;
+.dot:nth-child(2) {
+    animation-delay: 0.2s;
 }
 
-.witch-connecting::before {
-    left: 30%;
-    top: -5px;
-    animation-delay: 0.5s;
+.dot:nth-child(3) {
+    animation-delay: 0.4s;
 }
 
-.witch-connecting::after {
-    right: 30%;
-    top: -5px;
-    animation-delay: 1s;
+@keyframes dot-pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.5;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
 }
 
 @keyframes float {
-    0% {
-        transform: translateY(0) rotate(0deg);
-        opacity: 0.3;
+    0%, 100% {
+        transform: translateY(0);
     }
     50% {
-        transform: translateY(-10px) rotate(180deg);
-        opacity: 1;
-    }
-    100% {
-        transform: translateY(0) rotate(360deg);
-        opacity: 0.3;
-    }
-}
-
-@keyframes witch-glow {
-    0% { 
-        text-shadow: 0 0 5px rgba(176, 224, 230, 0.5);
-        opacity: 0.7;
-    }
-    50% { 
-        text-shadow: 0 0 15px rgba(255, 215, 0, 0.8), 0 0 20px rgba(176, 224, 230, 0.8);
-        opacity: 1;
-    }
-    100% { 
-        text-shadow: 0 0 5px rgba(176, 224, 230, 0.5);
-        opacity: 0.7;
+        transform: translateY(-10px);
     }
 }
 
@@ -428,23 +572,44 @@ h2 {
 .chat-container {
     margin-top: 2rem;
     background: rgba(26, 26, 74, 0.5);
+    background-image: url('witch.png');
+    background-size: cover;
+    background-position: center 20%;
+    background-repeat: no-repeat;
     border-radius: 15px;
     padding: 1rem;
-    display: none;
     box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
     max-width: 800px;
     margin-left: auto;
     margin-right: auto;
+    position: relative;
+    height: 600px;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(26, 26, 74, 0.7);
+    border-radius: 15px;
+    z-index: 1;
 }
 
 .chat-messages {
-    height: 300px;
+    flex: 1;
     overflow-y: auto;
     padding: 1rem;
     margin-bottom: 1rem;
     background: rgba(12, 12, 42, 0.5);
     border-radius: 10px;
     text-align: left;
+    position: relative;
+    z-index: 2;
 }
 
 .chat-message {
@@ -470,6 +635,9 @@ h2 {
 .chat-input-container {
     display: flex;
     gap: 10px;
+    position: relative;
+    z-index: 2;
+    flex-shrink: 0;
 }
 
 .chat-input-container input {
@@ -531,7 +699,43 @@ h2 {
     opacity: 0.3;
 }
 
+/* 響應式設計 */
 @media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+    
+    h1 {
+        font-size: 2rem;
+    }
+    
+    .page-layout {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .left-panel {
+        flex: none;
+        width: 100%;
+        position: static;
+    }
+    
+    .right-panel {
+        width: 100%;
+    }
+    
+    .current-question {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+    }
+    
+    .current-question .restart-button {
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto;
+    }
+    
     .card-section {
         flex-direction: column;
         align-items: center;
@@ -546,11 +750,6 @@ h2 {
         flex-direction: column;
     }
     
-    .question-container label {
-        margin-bottom: 10px;
-        margin-right: 0;
-    }
-    
     .question-container input {
         width: 100%;
     }
@@ -561,11 +760,30 @@ h2 {
         gap: 10px;
     }
     
-    .preset-btn,
-    .reset-button-small {
+    .preset-btn {
         width: 100%;
         max-width: 300px;
         padding: 10px 16px;
+    }
+    
+    .page-navigation {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .back-button, .next-button, .restart-button {
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .selected-cards-summary {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .selected-card-item {
+        width: 100%;
+        max-width: 300px;
     }
 }
 
@@ -628,4 +846,23 @@ h2 {
     .center-instructions {
         font-size: 1.1rem;
     }
+} 
+
+/* 頁面佈局 - 左右分欄 */
+.page-layout {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+}
+
+.left-panel {
+    flex: 0 0 300px;
+    position: sticky;
+    top: 2rem;
+}
+
+.right-panel {
+    flex: 1;
+    min-width: 0;
 } 

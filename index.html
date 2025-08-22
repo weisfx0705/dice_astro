@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>占星卡牌占卜</title>
+    <title>占星卡牌占卜 - 闖關版</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
 </head>
@@ -21,60 +21,231 @@
             </div>
         </div>
         
-        <h1>占星卡牌占卜</h1>
-        
-        <p class="instructions">從每堆牌中各選擇一張，探索您的命運軌跡</p>
-        
-        <!-- 占卜問題輸入框 -->
-        <div class="question-container">
-            <label for="divination-question">您要占卜的問題：</label>
-            <input type="text" id="divination-question" placeholder="請先輸入您的問題...(enter鍵發送)">
-            <div class="preset-questions">
-                <button class="preset-btn" data-question="我今天的運勢">我今天的運勢</button>
-                <button class="preset-btn" data-question="我的靈魂想告訴我的事">我的靈魂想告訴我的事</button>
-                <button class="reset-button-small" id="reset-button-small">重新抽牌</button>
-            </div>
-        </div>
-        
-        <div class="card-section">
-            <div class="card-pile">
-                <h2>行星</h2>
-                <div class="cards" id="planet-cards"></div>
-                <div class="selected-card" id="selected-planet"></div>
-                <p class="card-name" id="planet-name"></p>
-            </div>
+        <!-- 頁面1: 問題輸入頁 -->
+        <div id="page-1" class="page active">
+            <h1>占星卡牌占卜</h1>
+            <p class="instructions">請先告訴我您想要占卜的問題</p>
             
-            <div class="card-pile">
-                <h2>星座</h2>
-                <div class="cards" id="star-cards"></div>
-                <div class="selected-card" id="selected-star"></div>
-                <p class="card-name" id="star-name"></p>
+            <div class="question-container">
+                <label for="divination-question">您的問題：</label>
+                <input type="text" id="divination-question" placeholder="請先輸入您的問題...enter送出">
+                <div class="preset-questions">
+                    <button class="preset-btn" data-question="我今天的運勢">我今天的運勢</button>
+                    <button class="preset-btn" data-question="我的靈魂想告訴我的事">我的靈魂想告訴我的事</button>
+                    <button class="preset-btn" data-question="最近感情運如何">最近感情運如何</button>
+                    <button class="preset-btn" data-question="最近事業發展">最近事業發展</button>
+                </div>
+                <br><button id="next-to-planet" class="next-button" disabled>開始抽牌</button>
             </div>
+        </div>
+
+        <!-- 頁面2: 行星牌頁 -->
+        <div id="page-2" class="page">
+            <h1>第一步：抽行星牌</h1>
+            <p class="instructions">從行星牌堆中選擇一張</p>
             
-            <div class="card-pile">
-                <h2>宮位</h2>
-                <div class="cards" id="house-cards"></div>
-                <div class="selected-card" id="selected-house"></div>
-                <p class="card-name" id="house-name"></p>
+            <div class="page-layout">
+                <div class="left-panel">
+                    <div class="current-question">
+                        <p>您的問題：<span id="question-display-1"></span></p>
+                        <button id="restart-journey-1" class="restart-button">重新開始</button>
+                    </div>
+                </div>
+                
+                <div class="right-panel">
+                    <div class="card-section">
+                        <div class="card-pile">
+                            <h2>行星</h2>
+                            <div class="cards" id="planet-cards"></div>
+                            <div class="selected-card" id="selected-planet"></div>
+                            <p class="card-name" id="planet-name"></p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        
-        <div class="results" id="results">
-            <h2>占卜結果</h2>
-            <p id="result-text"></p>
-            <p id="witch-connecting" class="witch-connecting">正在聯繫女巫中...</p>
-        </div>
-        
-        <!-- 聊天界面 -->
-        <div class="chat-container" id="chat-container">
-            <div class="chat-messages" id="chat-messages"></div>
-            <div class="chat-input-container">
-                <input type="text" id="chat-input" placeholder="繼續提問...">
-                <button id="send-message" class="send-button">發送</button>
+
+        <!-- 頁面3: 星座牌頁 -->
+        <div id="page-3" class="page">
+            <h1>第二步：抽星座牌</h1>
+            <p class="instructions">從星座牌堆中選擇一張</p>
+            
+            <div class="page-layout">
+                <div class="left-panel">
+                    <div class="current-question">
+                        <p>您的問題：<span id="question-display-2"></span></p>
+                        <button id="restart-journey-2" class="restart-button">重新開始</button>
+                    </div>
+                    
+                    <div class="selected-cards-summary">
+                        <div class="selected-card-item">
+                            <div class="card-image-small" id="planet-image-small"></div>
+                            <div class="card-info">
+                                <span class="card-label">行星：</span>
+                                <span id="planet-summary"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="right-panel">
+                    <div class="card-section">
+                        <div class="card-pile">
+                            <h2>星座</h2>
+                            <div class="cards" id="star-cards"></div>
+                            <div class="selected-card" id="selected-star"></div>
+                            <p class="card-name" id="star-name"></p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        
-        <button class="reset-button" id="reset-button">重新抽牌</button>
+
+        <!-- 頁面4: 宮位牌頁 -->
+        <div id="page-4" class="page">
+            <h1>第三步：抽宮位牌</h1>
+            <p class="instructions">從宮位牌堆中選擇一張</p>
+            
+            <div class="page-layout">
+                <div class="left-panel">
+                    <div class="current-question">
+                        <p>您的問題：<span id="question-display-3"></span></p>
+                        <button id="restart-journey-3" class="restart-button">重新開始</button>
+                    </div>
+                    
+                    <div class="selected-cards-summary">
+                        <div class="selected-card-item">
+                            <div class="card-image-small" id="planet-image-small-2"></div>
+                            <div class="card-info">
+                                <span class="card-label">行星：</span>
+                                <span id="planet-summary-2"></span>
+                            </div>
+                        </div>
+                        <div class="selected-card-item">
+                            <div class="card-image-small" id="star-image-small"></div>
+                            <div class="card-info">
+                                <span class="card-label">星座：</span>
+                                <span id="star-summary"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="right-panel">
+                    <div class="card-section">
+                        <div class="card-pile">
+                            <h2>宮位</h2>
+                            <div class="cards" id="house-cards"></div>
+                            <div class="selected-card" id="selected-house"></div>
+                            <p class="card-name" id="house-name"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 頁面5: 聯繫女巫頁 -->
+        <div id="page-5" class="page">
+            <h1>占星卡牌占卜</h1>
+            <p class="instructions">都是您自己的選擇</p>
+            
+            <div class="page-layout">
+                <div class="left-panel">
+                    <div class="current-question">
+                        <p>您的問題：<span id="question-display-4"></span></p>
+                        <button id="restart-journey-4" class="restart-button">重新開始</button>
+                    </div>
+                    
+                    <div class="selected-cards-summary">
+                        <div class="selected-card-item">
+                            <div class="card-image-small" id="planet-image-small-3"></div>
+                            <div class="card-info">
+                                <span class="card-label">行星：</span>
+                                <span id="planet-summary-3"></span>
+                            </div>
+                        </div>
+                        <div class="selected-card-item">
+                            <div class="card-image-small" id="star-image-small-2"></div>
+                            <div class="card-info">
+                                <span class="card-label">星座：</span>
+                                <span id="star-summary-2"></span>
+                            </div>
+                        </div>
+                        <div class="selected-card-item">
+                            <div class="card-image-small" id="house-image-small"></div>
+                            <div class="card-info">
+                                <span class="card-label">宮位：</span>
+                                <span id="house-summary"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="right-panel">
+                    <div class="witch-connecting-container">
+                        <div class="witch-connecting" id="witch-connecting">
+                            <div class="witch-icon">🔮</div>
+                            <p>正在聯繫女巫中...</p>
+                            <div class="connecting-dots">
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 頁面6: 女巫回覆頁 -->
+        <div id="page-6" class="page">
+            <h1>占星卡牌占卜</h1>
+            <p class="instructions">聆聽女巫的厭世智慧</p>
+            
+            <div class="page-layout">
+                <div class="left-panel">
+                    <div class="current-question">
+                        <p>您的問題：<span id="question-display-5"></span></p>
+                        <button id="restart-journey-5" class="restart-button">重新開始</button>
+                    </div>
+                    
+                    <div class="selected-cards-summary">
+                        <div class="selected-card-item">
+                            <div class="card-image-small" id="planet-image-small-4"></div>
+                            <div class="card-info">
+                                <span class="card-label">行星：</span>
+                                <span id="planet-summary-4"></span>
+                            </div>
+                        </div>
+                        <div class="selected-card-item">
+                            <div class="card-image-small" id="star-image-small-3"></div>
+                            <div class="card-info">
+                                <span class="card-label">星座：</span>
+                                <span id="star-summary-3"></span>
+                            </div>
+                        </div>
+                        <div class="selected-card-item">
+                            <div class="card-image-small" id="house-image-small-2"></div>
+                            <div class="card-info">
+                                <span class="card-label">宮位：</span>
+                                <span id="house-summary-2"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="right-panel">
+                    <!-- 聊天界面 -->
+                    <div class="chat-container" id="chat-container">
+                        <div class="chat-messages" id="chat-messages"></div>
+                        <div class="chat-input-container">
+                            <input type="text" id="chat-input" placeholder="繼續提問...">
+                            <button id="send-message" class="send-button">發送</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         
         <!-- 頁腳信息 -->
         <footer class="site-footer">

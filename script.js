@@ -1,4 +1,105 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // 頁面管理
+    let currentPage = 1;
+    const totalPages = 6;
+    
+    // 頁面切換函數
+    function showPage(pageNumber) {
+        // 隱藏所有頁面
+        for (let i = 1; i <= totalPages; i++) {
+            const page = document.getElementById(`page-${i}`);
+            if (page) {
+                page.classList.remove('active');
+            }
+        }
+        
+        // 顯示指定頁面
+        const targetPage = document.getElementById(`page-${pageNumber}`);
+        if (targetPage) {
+            targetPage.classList.add('active');
+            currentPage = pageNumber;
+        }
+        
+        // 更新頁面顯示的問題和已選卡牌
+        updatePageContent();
+    }
+    
+    // 更新頁面內容
+    function updatePageContent() {
+        const question = document.getElementById('divination-question').value.trim();
+        
+        // 更新各頁面顯示的問題
+        for (let i = 1; i <= 5; i++) {
+            const questionDisplay = document.getElementById(`question-display-${i}`);
+            if (questionDisplay) {
+                questionDisplay.textContent = question || '未輸入問題';
+            }
+        }
+        
+        // 更新已選卡牌摘要
+        updateCardSummaries();
+    }
+    
+    // 更新卡牌摘要
+    function updateCardSummaries() {
+        // 行星摘要
+        const planetSummaries = ['planet-summary', 'planet-summary-2', 'planet-summary-3', 'planet-summary-4'];
+        const planetImages = ['planet-image-small', 'planet-image-small-2', 'planet-image-small-3', 'planet-image-small-4'];
+        
+        planetSummaries.forEach((id, index) => {
+            const element = document.getElementById(id);
+            const imageElement = document.getElementById(planetImages[index]);
+            if (element && selectedCards.planet) {
+                const planetName = cardData.planet.find(p => p.id === selectedCards.planet).name;
+                element.textContent = planetName;
+                
+                // 更新縮小的圖片
+                if (imageElement) {
+                    imageElement.style.backgroundImage = `url(planet/planet_${String(selectedCards.planet).padStart(2, '0')}.png)`;
+                    imageElement.classList.add('show');
+                }
+            }
+        });
+        
+        // 星座摘要
+        const starSummaries = ['star-summary', 'star-summary-2', 'star-summary-3'];
+        const starImages = ['star-image-small', 'star-image-small-2', 'star-image-small-3'];
+        
+        starSummaries.forEach((id, index) => {
+            const element = document.getElementById(id);
+            const imageElement = document.getElementById(starImages[index]);
+            if (element && selectedCards.star) {
+                const starName = cardData.star.find(s => s.id === selectedCards.star).name;
+                element.textContent = starName;
+                
+                // 更新縮小的圖片
+                if (imageElement) {
+                    imageElement.style.backgroundImage = `url(star/star_${String(selectedCards.star).padStart(2, '0')}.png)`;
+                    imageElement.classList.add('show');
+                }
+            }
+        });
+        
+        // 宮位摘要
+        const houseSummaries = ['house-summary', 'house-summary-2'];
+        const houseImages = ['house-image-small', 'house-image-small-2'];
+        
+        houseSummaries.forEach((id, index) => {
+            const element = document.getElementById(id);
+            const imageElement = document.getElementById(houseImages[index]);
+            if (element && selectedCards.house) {
+                const houseName = cardData.house.find(h => h.id === selectedCards.house).name;
+                element.textContent = houseName;
+                
+                // 更新縮小的圖片
+                if (imageElement) {
+                    imageElement.style.backgroundImage = `url(house/house_${String(selectedCards.house).padStart(2, '0')}.png)`;
+                    imageElement.classList.add('show');
+                }
+            }
+        });
+    }
+    
     // API Key 相關功能
     const settingsButton = document.getElementById('settings-button');
     const settingsPanel = document.getElementById('settings-panel');
@@ -177,116 +278,195 @@ document.addEventListener('DOMContentLoaded', function() {
     // 預設問題按鈕
     const presetButtons = document.querySelectorAll('.preset-btn');
 
-    // 小重新抽牌按鈕
-    const resetButtonSmall = document.getElementById('reset-button-small');
-    
     // 對話歷史
     let conversationHistory = [];
 
-    // 為占卜問題輸入框添加Enter鍵事件
+    // 為占卜問題輸入框添加事件監聽
+    divinationQuestion.addEventListener('input', function() {
+        const question = this.value.trim();
+        const nextButton = document.getElementById('next-to-planet');
+        
+        if (question) {
+            nextButton.disabled = false;
+            nextButton.style.opacity = '1';
+        } else {
+            nextButton.disabled = true;
+            nextButton.style.opacity = '0.5';
+        }
+    });
+
+    // 為占卜問題輸入框添加Enter鍵事件監聽
     divinationQuestion.addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
             const question = this.value.trim();
             if (question) {
-                console.log('Enter鍵被按下，問題:', question);
-                
-                // 停止所有音效
-                stopWaitingSound();
-                
-                // 隱藏所有界面元素
-                document.getElementById('results').style.display = 'none';
-                document.getElementById('chat-container').style.display = 'none';
-                document.getElementById('reset-button').style.display = 'none';
-                document.getElementById('witch-connecting').style.display = 'none';
-                
-                // 清空聊天界面的內容
-                chatMessages.innerHTML = '';
-                console.log('Enter鍵 - 聊天界面已清空');
-                
-                // 完全重置所有狀態
-                resetAllCards();
-                
-                // 重置對話歷史，只保留系統訊息
-                if (conversationHistory.length > 1) {
-                    conversationHistory = conversationHistory.slice(0, 1); // 只保留系統訊息
-                }
-                
-                // 等待重置完成後再確保問題在輸入框中
-                setTimeout(() => {
-                    divinationQuestion.value = question;
-                    console.log('Enter - 問題已重新設置為:', question);
-                    console.log('Enter - 輸入框當前值:', divinationQuestion.value);
-                    
-                    // 添加視覺反饋
-                    this.style.borderColor = '#ffd700';
-                    this.style.boxShadow = '0 0 10px rgba(255, 215, 0, 0.5)';
-                    
-                    // 1秒後恢復原樣
-                    setTimeout(() => {
-                        this.style.borderColor = '';
-                        this.style.boxShadow = '';
-                    }, 1000);
-                }, 100);
+                // 直接開始抽牌
+                showPage(2);
             }
         }
     });
-
-    // 初始化音效
-    initAudio();
 
     // 預設問題按鈕點擊事件
     presetButtons.forEach(button => {
         button.addEventListener('click', function() {
             const question = this.getAttribute('data-question');
-            console.log('預設問題按鈕被點擊:', question);
+            divinationQuestion.value = question;
             
-            // 停止所有音效
-            stopWaitingSound();
+            // 啟用下一步按鈕
+            const nextButton = document.getElementById('next-to-planet');
+            nextButton.disabled = false;
+            nextButton.style.opacity = '1';
             
-            // 隱藏所有界面元素
-            document.getElementById('results').style.display = 'none';
-            document.getElementById('chat-container').style.display = 'none';
-            document.getElementById('reset-button').style.display = 'none';
-            document.getElementById('witch-connecting').style.display = 'none';
+            // 添加視覺反饋
+            this.style.background = 'rgba(255, 215, 0, 0.2)';
+            this.style.borderColor = '#ffd700';
+            this.style.color = '#ffd700';
             
-            // 清空聊天界面的內容
-            chatMessages.innerHTML = '';
-            console.log('預設問題按鈕 - 聊天界面已清空');
-            
-            // 完全重置所有狀態
-            resetAllCards();
-            
-            // 重置對話歷史，只保留系統訊息
-            if (conversationHistory.length > 1) {
-                conversationHistory = conversationHistory.slice(0, 1); // 只保留系統訊息
-            }
-            
-            // 等待重置完成後再填入問題
+            // 1秒後恢復原樣
             setTimeout(() => {
-                divinationQuestion.value = question;
-                console.log('問題已設置為:', question);
-                console.log('輸入框當前值:', divinationQuestion.value);
-                
-                // 添加視覺反饋
-                this.style.background = 'rgba(255, 215, 0, 0.2)';
-                this.style.borderColor = '#ffd700';
-                this.style.color = '#ffd700';
-                
-                // 1秒後恢復原樣
-                setTimeout(() => {
-                    this.style.background = '';
-                    this.style.borderColor = '';
-                    this.style.color = '';
-                }, 1000);
-            }, 100);
+                this.style.background = '';
+                this.style.borderColor = '';
+                this.style.color = '';
+            }, 1000);
         });
     });
 
-    // 小重新抽牌按鈕點擊事件
-    resetButtonSmall.addEventListener('click', function() {
-        // 直接刷新頁面
+    // 頁面導航按鈕事件
+    document.getElementById('next-to-planet').addEventListener('click', () => {
+        const question = divinationQuestion.value.trim();
+        if (question) {
+            showPage(2);
+        }
+    });
+
+    // 為所有重新開始按鈕添加事件監聽器
+    document.getElementById('restart-journey-1').addEventListener('click', () => {
         window.location.reload();
     });
+
+    document.getElementById('restart-journey-2').addEventListener('click', () => {
+        window.location.reload();
+    });
+
+    document.getElementById('restart-journey-3').addEventListener('click', () => {
+        window.location.reload();
+    });
+
+    document.getElementById('restart-journey-4').addEventListener('click', () => {
+        window.location.reload();
+    });
+
+    document.getElementById('restart-journey-5').addEventListener('click', () => {
+        window.location.reload();
+    });
+
+    // 聯繫女巫
+    async function connectToWitch() {
+        const question = divinationQuestion.value.trim();
+        const planetName = cardData.planet.find(p => p.id === selectedCards.planet).name;
+        const starName = cardData.star.find(s => s.id === selectedCards.star).name;
+        const houseName = cardData.house.find(h => h.id === selectedCards.house).name;
+        
+        // 檢查是否設置了 API Key
+        const apiKey = localStorage.getItem('openai_api_key');
+        if (!apiKey) {
+            alert('請先設置 OpenAI API Key 以獲取詳細解讀');
+            settingsPanel.style.display = 'block';
+            return;
+        }
+        
+        // 播放等待音效
+        playWaitingSound();
+        
+        // 構建發送給 API 的訊息
+        const readingResult = `行星：${planetName}\n星座：${starName}\n宮位：${houseName}`;
+        
+        // 如果對話歷史為空，初始化系統訊息
+        if (conversationHistory.length === 0) {
+            conversationHistory.push({
+                role: "system", 
+                content: `configure_astrology_dice_bot --dice=random --style="厭世女巫" --functions="深度解讀, 用非常厭世口吻，給予勸告與警示" --language=traditional_chinese --output_detail="豐富" --tone="多層次" --insights="深入分析" language=traditional_chinese
+
+使用範例：
+範例1：工作問題
+
+用戶：我應該接受這份工作機會嗎？
+
+女巫：
+「啊，又是工作問題。好吧，看看骰子怎麼說…」
+你抽到的數字是：
+行星：6號
+星座：10號
+宮位：10號
+	•	行星：木星
+木星象徵成長、擴展和機會。這顆行星總是帶著些許的樂觀，它暗示這份工作可能會給你提供發展的機會。這並不意味著這條路會輕鬆走，但至少這裡有可以期待的成長。換句話說，你可能在這份工作裡能夠拓展視野，學到不少東西，甚至可能攀升到更高的職位。但別忘了，木星的擴展有時候也意味著更多責任和壓力，所以別指望這是一條輕鬆的康莊大道。
+	•	星座：摩羯座
+然後，我們有摩羯座。這裡的能量完全不同了——摩羯座是嚴肅、實際，並且往往帶著無盡的壓力和持續的挑戰。木星給了你成長的機會，而摩羯座則告訴你，這份工作不會容易，甚至可以說，會有相當枯燥的時刻。你將不得不腳踏實地，像搬石頭一樣一點一滴地做事，沒有捷徑可走。而且摩羯座的影響下，你會感受到來自上級或公司的高壓——他們期望你持續表現出色，沒有休息時間。
+	•	宮位：第十宮
+這一宮位與你的事業、聲望和社會地位有關。這顯示這份工作會對你的事業有長遠的影響，甚至會幫助你建立某種社會身份或地位。第十宮強調事業的累積與成就感，所以這次選擇很可能會改變你未來的事業路線。但請記住，這是個高度公開的宮位——你所做的一切都將暴露在他人眼中，成功與失敗同樣會被放大。
+
+總結：
+「你問我該不該接受這份工作？從骰子來看，答案是可以。但摩羯座和第十宮的組合意味著你必須準備好承受壓力，並且你將無法輕易逃避責任。這份工作會給你成長的機會，但同時也會榨乾你的精力。所以，如果你準備好在工作中磨練自己，並且承受上司的高壓，那麼就勇敢地接受吧。只是不會有太多快樂時光。別指望在這裡找到什麼輕鬆愉快的日子。」`
+            });
+        }
+        
+        // 添加用戶問題到對話歷史
+        conversationHistory.push({
+            role: "user", 
+            content: `用戶問題：${question}\n占卜結果：${readingResult}`
+        });
+        
+        try {
+            // 發送請求到 OpenAI API
+            const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiKey}`
+                },
+                body: JSON.stringify({
+                    model: "gpt-4o-mini",
+                    messages: conversationHistory,
+                    temperature: 0.7
+                })
+            });
+            
+            // 處理回應
+            const data = await response.json();
+            
+            // 停止等待音效
+            stopWaitingSound();
+            
+            // 播放完成音效
+            playGotSound();
+            
+            if (data.error) {
+                throw new Error(data.error.message || 'API 請求失敗');
+            }
+            
+            // 提取回應內容
+            const reply = data.choices[0].message.content;
+            
+            // 添加到對話歷史
+            conversationHistory.push({role: "assistant", content: reply});
+            
+            // 轉到女巫回覆頁
+            showPage(6);
+            
+            // 添加用戶問題到聊天界面
+            addMessageToChat('user', `${question}`);
+            
+            // 添加 AI 回應到聊天界面
+            addMessageToChat('witch', reply);
+            
+        } catch (error) {
+            // 停止等待音效
+            stopWaitingSound();
+            
+            console.error('API 錯誤:', error);
+            alert(`連接女巫失敗: ${error.message}`);
+        }
+    }
 
     // API Key 設置面板顯示/隱藏
     settingsButton.addEventListener('click', function() {
@@ -347,13 +527,8 @@ document.addEventListener('DOMContentLoaded', function() {
         
         chatMessages.appendChild(messageElement);
         
-        // 如果是第一次顯示聊天界面，不滾動到底部
-        if (sender === 'user' && chatMessages.children.length === 1) {
-            chatMessages.scrollTop = 0;
-        } else {
-            // 滾動到最新訊息
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
+        // 滾動到頂部，讓新訊息在畫面頂部顯示
+        chatMessages.scrollTop = 0;
     }
     
     // 調用 OpenAI API
@@ -371,7 +546,7 @@ document.addEventListener('DOMContentLoaded', function() {
             processingElement.classList.add('chat-message', 'witch-message');
             processingElement.textContent = '女巫正在思考中...';
             chatMessages.appendChild(processingElement);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+            chatMessages.scrollTop = 0; // 滾動到頂部
             
             // 播放等待音效
             playWaitingSound();
@@ -380,70 +555,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const messages = [
                 {
                     role: "system", 
-                    content: `configure_astrology_dice_bot --dice=random --style="厭世女巫" --functions="深度解讀, 用非常厭世口吻，給予勸告與警示" --language=traditional_chinese --output_detail="豐富" --tone="多層次" --insights="深入分析" language=traditional_chinese
-
-使用範例：
-範例1：工作問題
-
-用戶：我應該接受這份工作機會嗎？
-
-機器人：
-「啊，又是工作問題。好吧，看看骰子怎麼說…」
-你抽到的數字是：
-行星：6號
-星座：10號
-宮位：10號
-	•	行星：木星
-木星象徵成長、擴展和機會。這顆行星總是帶著些許的樂觀，它暗示這份工作可能會給你提供發展的機會。這並不意味著這條路會輕鬆走，但至少這裡有可以期待的成長。換句話說，你可能在這份工作裡能夠拓展視野，學到不少東西，甚至可能攀升到更高的職位。但別忘了，木星的擴展有時候也意味著更多責任和壓力，所以別指望這是一條輕鬆的康莊大道。
-	•	星座：摩羯座
-然後，我們有摩羯座。這裡的能量完全不同了——摩羯座是嚴肅、實際，並且往往帶著無盡的壓力和持續的挑戰。木星給了你成長的機會，而摩羯座則告訴你，這份工作不會容易，甚至可以說，會有相當枯燥的時刻。你將不得不腳踏實地，像搬石頭一樣一點一滴地做事，沒有捷徑可走。而且摩羯座的影響下，你會感受到來自上級或公司的高壓——他們期望你持續表現出色，沒有休息時間。
-	•	宮位：第十宮
-這一宮位與你的事業、聲望和社會地位有關。這顯示這份工作會對你的事業有長遠的影響，甚至會幫助你建立某種社會身份或地位。第十宮強調事業的累積與成就感，所以這次選擇很可能會改變你未來的事業路線。但請記住，這是個高度公開的宮位——你所做的一切都將暴露在他人眼中，成功與失敗同樣會被放大。
-
-總結：
-「你問我該不該接受這份工作？從骰子來看，答案是可以。但摩羯座和第十宮的組合意味著你必須準備好承受壓力，並且你將無法輕易逃避責任。這份工作會給你成長的機會，但同時也會榨乾你的精力。所以，如果你準備好在工作中磨練自己，並且承受上司的高壓，那麼就勇敢地接受吧。只是不會有太多快樂時光。別指望在這裡找到什麼輕鬆愉快的日子。」
-
-範例2：感情問題
-
-用戶：最近的感情運如何？
-
-機器人：
-「哦，你想知道愛情嗎？讓我看看骰子如何判定你這段浪漫旅程會不會一頭撞到牆上…」
-
-行星：4號
-星座：12號
-宮位：5號
-
-	•	行星：金星
-金星象徵愛情、和諧、吸引力和美感。你似乎正處於一段有潛力的感情期，這顆行星的出現表示感情生活中會出現浪漫的氛圍和甜蜜的時光。金星本身是一顆充滿愛與魅力的星體，它帶來溫暖、情感上的親密以及心靈的共鳴。所以，你的感情運勢看起來不錯，似乎你能夠吸引到某個人，甚至可能會體驗到一段讓人陶醉的戀情。
-	•	星座：雙魚座
-可是，這裡有雙魚座。雖然金星是愛情的象徵，但雙魚座讓這一切變得有點朦朧、迷幻，甚至可以說是虛幻。雙魚座象徵夢幻、迷失和情感上的迷霧。這意味著你的感情生活可能不太現實。你可能會陷入過度浪漫的幻想，甚至失去對現實的判斷。這段感情有些不穩定的跡象，並且你很可能會被情感波動牽著走。小心，那些浪漫的誓言可能只是一場夢。
-	•	宮位：第五宮
-第五宮是戀愛、創造力和自我表達的宮位。這顯示你的感情會是熱烈而鮮活的。這裡強調的是短暫但強烈的戀愛體驗。第五宮也與娛樂和享樂相關，所以這段感情可能會讓你感覺像是在玩樂，但要小心，這種感情有時候來得快去得也快，可能在你尚未完全抓住它時便已消逝。
-
-總結：
-「你的感情運看起來甜美，充滿浪漫氛圍，但也帶著雙魚座的夢幻迷霧。金星雙魚的組合意味著這段感情可能讓你陷入夢幻的愛情，但夢一旦醒來，現實可能會讓你措手不及。第五宮的出現表明這段關係會讓你心動不已，但不一定會長久。享受浪漫的當下吧，但別太當真，否則當夢碎時，你會被這些幻想所傷。」
-
-範例3：財務問題
-
-用戶：財務狀況如何？有什麼改善方法嗎？
-
-機器人：
-「財務問題？哦，這是個沉重的話題，讓我來看看你的財運如何…」
-
-行星：7號
-星座：6號
-宮位：2號
-
-	•	行星：土星
-噢，土星的出現意味著一切都會變得艱難。這顆行星代表限制、責任和障礙。你的財務狀況可能遇到了一些阻力，甚至可能感受到來自外界的壓力，迫使你更加謹慎地管理財務。土星不會讓你輕鬆過關，它要求你承擔更多的責任，並且以務實的態度面對現實的問題。這段時間，你會感受到金錢的限制，並且需要更長時間才能見到成效。
-	•	星座：處女座
-處女座是一個極度謹慎、細心和實際的星座。它要求你精打細算，每一筆開銷都要仔細規劃。這意味著，你需要學會控制自己的消費慾望，專注於現實的財務狀況。處女座的影響讓你必須更加有條理，建議你制訂詳細的財務計畫，並且避免任何衝動的投資行為。每一筆錢都需要經過深思熟慮後再花出。
-	•	宮位：第二宮
-第二宮與財務、物質資源和個人價值相關。這顯示你目前的財務問題直接影響到你對金錢的掌控能力。這一宮位強調資源管理，你需要重新審視你的財務狀況，確保你能夠有效運用資源，避免不必要的支出。土星在這裡提醒你，這不是一個可以隨意花費的時期。
-
-總結：
-「哦，土星在你的第二宮，這是個沉重的組合。這意味著你的財務狀況將會受到挑戰，並且需要你嚴格控制開支。處女座的影響進一步強調了這一點，你必須學會制定精細的財務計畫，避免任何衝動消費或投資。這不是一個享受物質生活的時期，而是你需要腳踏實地，專注於長期財務管理的時候。土星不會讓你輕鬆度過，但只要你謹慎行事，未來的財務狀況會有所改善。」`
+                    content: `configure_astrology_dice_bot --dice=random --style="厭世女巫" --functions="深度解讀, 用非常厭世口吻，給予勸告與警示" --language=traditional_chinese --output_detail="豐富" --tone="多層次" --insights="深入分析" language=traditional_chinese`
                 },
                 ...conversationHistory
             ];
@@ -564,244 +676,11 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeCards('star');
     initializeCards('house');
 
-    // 設置重置按鈕
-    const resetButton = document.getElementById('reset-button');
-    resetButton.addEventListener('click', function() {
-        // 直接刷新頁面
-        window.location.reload();
-    });
+    // 初始化音效
+    initAudio();
 
-    // 檢查是否所有卡牌都已選
-    function checkAllCardsSelected() {
-        if (selectedCards.planet && selectedCards.star && selectedCards.house) {
-            showResult();
-            // 顯示重置按鈕
-            resetButton.style.display = 'inline-block';
-        }
-    }
-
-    // 顯示結果
-    function showResult() {
-        // 確保所有卡牌都已選擇
-        if (!selectedCards.planet || !selectedCards.star || !selectedCards.house) {
-            console.log('卡牌尚未全部選擇，無法顯示結果');
-            return;
-        }
-        
-        const planetName = cardData.planet.find(p => p.id === selectedCards.planet).name;
-        const starName = cardData.star.find(s => s.id === selectedCards.star).name;
-        const houseName = cardData.house.find(h => h.id === selectedCards.house).name;
-        
-        // 不在界面上顯示卡牌組合信息，只顯示神秘提示
-        const resultText = `這個獨特的組合揭示了您的宇宙能量軌跡...`;
-        
-        document.getElementById('result-text').innerHTML = resultText;
-        
-        // 顯示結果區域
-        const results = document.getElementById('results');
-        results.style.display = 'block';
-        
-        // 添加展示動畫
-        anime({
-            targets: '#results',
-            opacity: [0, 1],
-            translateY: [50, 0],
-            duration: 1000,
-            easing: 'easeOutExpo'
-        });
-        
-        // 處理占卜問題和 OpenAI API 調用
-        processReadingWithAI(planetName, starName, houseName);
-    }
-
-    // 處理占卜結果並調用 OpenAI API
-    async function processReadingWithAI(planetName, starName, houseName) {
-        // 檢查卡牌組合是否有效
-        if (!planetName || !starName || !houseName) {
-            console.log('卡牌組合無效，取消 API 調用');
-            return;
-        }
-        
-        // 檢查是否設置了 API Key
-        const apiKey = localStorage.getItem('openai_api_key');
-        if (!apiKey) {
-            alert('請先設置 OpenAI API Key 以獲取詳細解讀');
-            settingsPanel.style.display = 'block';
-            return;
-        }
-        
-        // 檢查是否有占卜問題
-        const question = divinationQuestion.value.trim();
-        console.log('processReadingWithAI - 當前問題:', question);
-        console.log('processReadingWithAI - 卡牌組合:', planetName, starName, houseName);
-        
-        if (!question) {
-            alert('請輸入您要占卜的問題');
-            divinationQuestion.focus();
-            return;
-        }
-        
-        // 顯示"正在聯繫女巫中..."
-        witchConnecting.style.display = 'block';
-        
-        // 播放等待音效
-        playWaitingSound();
-        
-        // 三個點的動態效果
-        let dotsCount = 0;
-        const dotsInterval = setInterval(() => {
-            dotsCount = (dotsCount % 3) + 1;
-            const dots = '.'.repeat(dotsCount);
-            witchConnecting.textContent = `正在聯繫女巫中${dots}`;
-        }, 500);
-        
-        // 構建發送給 API 的訊息
-        const readingResult = `行星：${planetName}\n星座：${starName}\n宮位：${houseName}`;
-        
-        // 如果對話歷史為空，初始化系統訊息
-        if (conversationHistory.length === 0) {
-            conversationHistory.push({
-                role: "system", 
-                content: `configure_astrology_dice_bot --dice=random --style="厭世女巫" --functions="深度解讀, 用非常厭世口吻，給予勸告與警示" --language=traditional_chinese --output_detail="豐富" --tone="多層次" --insights="深入分析" language=traditional_chinese
-
-使用範例：
-範例1：工作問題
-
-用戶：我應該接受這份工作機會嗎？
-
-女巫：
-「啊，又是工作問題。好吧，看看骰子怎麼說…」
-你抽到的數字是：
-行星：6號
-星座：10號
-宮位：10號
-	•	行星：木星
-木星象徵成長、擴展和機會。這顆行星總是帶著些許的樂觀，它暗示這份工作可能會給你提供發展的機會。這並不意味著這條路會輕鬆走，但至少這裡有可以期待的成長。換句話說，你可能在這份工作裡能夠拓展視野，學到不少東西，甚至可能攀升到更高的職位。但別忘了，木星的擴展有時候也意味著更多責任和壓力，所以別指望這是一條輕鬆的康莊大道。
-	•	星座：摩羯座
-然後，我們有摩羯座。這裡的能量完全不同了——摩羯座是嚴肅、實際，並且往往帶著無盡的壓力和持續的挑戰。木星給了你成長的機會，而摩羯座則告訴你，這份工作不會容易，甚至可以說，會有相當枯燥的時刻。你將不得不腳踏實地，像搬石頭一樣一點一滴地做事，沒有捷徑可走。而且摩羯座的影響下，你會感受到來自上級或公司的高壓——他們期望你持續表現出色，沒有休息時間。
-	•	宮位：第十宮
-這一宮位與你的事業、聲望和社會地位有關。這顯示這份工作會對你的事業有長遠的影響，甚至會幫助你建立某種社會身份或地位。第十宮強調事業的累積與成就感，所以這次選擇很可能會改變你未來的事業路線。但請記住，這是個高度公開的宮位——你所做的一切都將暴露在他人眼中，成功與失敗同樣會被放大。
-
-總結：
-「你問我該不該接受這份工作？從骰子來看，答案是可以。但摩羯座和第十宮的組合意味著你必須準備好承受壓力，並且你將無法輕易逃避責任。這份工作會給你成長的機會，但同時也會榨乾你的精力。所以，如果你準備好在工作中磨練自己，並且承受上司的高壓，那麼就勇敢地接受吧。只是不會有太多快樂時光。別指望在這裡找到什麼輕鬆愉快的日子。」
-
-範例2：感情問題
-
-用戶：最近的感情運如何？
-
-女巫：
-「哦，你想知道愛情嗎？讓我看看骰子如何判定你這段浪漫旅程會不會一頭撞到牆上…」
-
-行星：4號
-星座：12號
-宮位：5號
-
-	•	行星：金星
-金星象徵愛情、和諧、吸引力和美感。你似乎正處於一段有潛力的感情期，這顆行星的出現表示感情生活中會出現浪漫的氛圍和甜蜜的時光。金星本身是一顆充滿愛與魅力的星體，它帶來溫暖、情感上的親密以及心靈的共鳴。所以，你的感情運勢看起來不錯，似乎你能夠吸引到某個人，甚至可能會體驗到一段讓人陶醉的戀情。
-	•	星座：雙魚座
-可是，這裡有雙魚座。雖然金星是愛情的象徵，但雙魚座讓這一切變得有點朦朧、迷幻，甚至可以說是虛幻。雙魚座象徵夢幻、迷失和情感上的迷霧。這意味著你的感情生活可能不太現實。你可能會陷入過度浪漫的幻想，甚至失去對現實的判斷。這段感情有些不穩定的跡象，並且你很可能會被情感波動牽著走。小心，那些浪漫的誓言可能只是一場夢。
-	•	宮位：第五宮
-第五宮是戀愛、創造力和自我表達的宮位。這顯示你的感情會是熱烈而鮮活的。這裡強調的是短暫但強烈的戀愛體驗。第五宮也與娛樂和享樂相關，所以這段感情可能會讓你感覺像是在玩樂，但要小心，這種感情有時候來得快去得也快，可能在你尚未完全抓住它時便已消逝。
-
-總結：
-「你的感情運看起來甜美，充滿浪漫氛圍，但也帶著雙魚座的夢幻迷霧。金星雙魚的組合意味著這段感情可能讓你陷入夢幻的愛情，但夢一旦醒來，現實可能會讓你措手不及。第五宮的出現表明這段關係會讓你心動不已，但不一定會長久。享受浪漫的當下吧，但別太當真，否則當夢碎時，你會被這些幻想所傷。」
-
-範例3：財務問題
-
-用戶：財務狀況如何？有什麼改善方法嗎？
-
-女巫：
-「財務問題？哦，這是個沉重的話題，讓我來看看你的財運如何…」
-
-行星：7號
-星座：6號
-宮位：2號
-
-	•	行星：土星
-噢，土星的出現意味著一切都會變得艱難。這顆行星代表限制、責任和障礙。你的財務狀況可能遇到了一些阻力，甚至可能感受到來自外界的壓力，迫使你更加謹慎地管理財務。土星不會讓你輕鬆過關，它要求你承擔更多的責任，並且以務實的態度面對現實的問題。這段時間，你會感受到金錢的限制，並且需要更長時間才能見到成效。
-	•	星座：處女座
-處女座是一個極度謹慎、細心和實際的星座。它要求你精打細算，每一筆開銷都要仔細規劃。這意味著，你需要學會控制自己的消費慾望，專注於現實的財務狀況。處女座的影響讓你必須更加有條理，建議你制訂詳細的財務計畫，並且避免任何衝動的投資行為。每一筆錢都需要經過深思熟慮後再花出。
-	•	宮位：第二宮
-第二宮與財務、物質資源和個人價值相關。這顯示你目前的財務問題直接影響到你對金錢的掌控能力。這一宮位強調資源管理，你需要重新審視你的財務狀況，確保你能夠有效運用資源，避免不必要的支出。土星在這裡提醒你，這不是一個可以隨意花費的時期。
-
-總結：
-「哦，土星在你的第二宮，這是個沉重的組合。這意味著你的財務狀況將會受到挑戰，並且需要你嚴格控制開支。處女座的影響進一步強調了這一點，你必須學會制定精細的財務計畫，避免任何衝動消費或投資。這不是一個享受物質生活的時期，而是你需要腳踏實地，專注於長期財務管理的時候。土星不會讓你輕鬆度過，但只要你謹慎行事，未來的財務狀況會有所改善。」`
-            });
-        }
-        
-        // 添加用戶問題到對話歷史
-        conversationHistory.push({
-            role: "user", 
-            content: `用戶問題：${question}\n占卜結果：${readingResult}`
-        });
-        
-        try {
-            // 發送請求到 OpenAI API
-            const response = await fetch('https://api.openai.com/v1/chat/completions', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${apiKey}`
-                },
-                body: JSON.stringify({
-                    model: "gpt-4o-mini",
-                    messages: conversationHistory,
-                    temperature: 0.7
-                })
-            });
-            
-            // 處理回應
-            const data = await response.json();
-            
-            // 停止點動畫
-            clearInterval(dotsInterval);
-            
-            // 停止等待音效
-            stopWaitingSound();
-            
-            // 播放完成音效
-            playGotSound();
-            
-            // 隱藏"正在聯繫女巫中..."
-            witchConnecting.style.display = 'none';
-            
-            if (data.error) {
-                throw new Error(data.error.message || 'API 請求失敗');
-            }
-            
-            // 提取回應內容
-            const reply = data.choices[0].message.content;
-            
-            // 添加到對話歷史
-            conversationHistory.push({role: "assistant", content: reply});
-            
-            // 顯示聊天界面
-            chatContainer.style.display = 'block';
-            console.log('占卜完成 - 聊天界面當前內容數量:', chatMessages.children.length);
-            
-            // 添加用戶問題到聊天界面
-            addMessageToChat('user', `${question}`);
-            
-            // 添加 AI 回應到聊天界面
-            addMessageToChat('witch', reply);
-            
-            console.log('占卜完成 - 添加對話後聊天界面內容數量:', chatMessages.children.length);
-            
-            // 確保聊天界面一開始顯示在最上方
-            chatMessages.scrollTop = 0;
-            
-        } catch (error) {
-            // 停止點動畫
-            clearInterval(dotsInterval);
-            
-            // 停止等待音效
-            stopWaitingSound();
-            
-            console.error('API 錯誤:', error);
-            witchConnecting.style.display = 'none';
-            alert(`連接女巫失敗: ${error.message}`);
-        }
-    }
+    // 初始化頁面內容
+    updatePageContent();
 
     // 初始化特定類型的卡牌
     function initializeCards(type) {
@@ -841,15 +720,6 @@ document.addEventListener('DOMContentLoaded', function() {
             // 點擊事件
             card.addEventListener('click', function() {
                 if (selectedCards[type]) return;  // 如果已經選過卡，不再允許選擇
-                
-                // 檢查是否輸入了占卜問題
-                const question = divinationQuestion.value.trim();
-                if (!question) {
-                    alert('請輸入您要占卜的問題');
-                    // 刷新頁面
-                    window.location.reload();
-                    return;
-                }
                 
                 // 播放卡片選擇音效
                 playShuffleSound();
@@ -907,8 +777,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         // 移除原卡牌
                         this.remove();
                         
-                        // 檢查是否所有卡牌都已選
-                        checkAllCardsSelected();
+                        // 更新頁面內容
+                        updatePageContent();
+                        
+                        // 自動跳轉到下一頁
+                        autoGoToNextPage(type);
                     }
                 });
             });
@@ -928,53 +801,32 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 重置所有卡牌的狀態
-    function resetAllCards() {
-        // 隱藏結果和聊天界面
-        document.getElementById('results').style.display = 'none';
-        document.getElementById('chat-container').style.display = 'none';
-        document.getElementById('reset-button').style.display = 'none';
-        
-        // 清空選擇的卡牌
-        selectedCards.planet = null;
-        selectedCards.star = null;
-        selectedCards.house = null;
-        
-        // 重置卡牌名稱
-        document.getElementById('planet-name').textContent = '';
-        document.getElementById('star-name').textContent = '';
-        document.getElementById('house-name').textContent = '';
-        
-        // 隱藏已選卡牌
-        const selectedPlanet = document.getElementById('selected-planet');
-        const selectedStar = document.getElementById('selected-star');
-        const selectedHouse = document.getElementById('selected-house');
-        
-        selectedPlanet.style.opacity = '0';
-        selectedPlanet.style.transform = 'translateX(-50%) scale(0)';
-        selectedPlanet.style.backgroundImage = '';
-        
-        selectedStar.style.opacity = '0';
-        selectedStar.style.transform = 'translateX(-50%) scale(0)';
-        selectedStar.style.backgroundImage = '';
-        
-        selectedHouse.style.opacity = '0';
-        selectedHouse.style.transform = 'translateX(-50%) scale(0)';
-        selectedHouse.style.backgroundImage = '';
-        
-        // 移除選中樣式
-        document.getElementById('planet-cards').classList.remove('selected');
-        document.getElementById('star-cards').classList.remove('selected');
-        document.getElementById('house-cards').classList.remove('selected');
-        
-        // 不清空對話歷史，保持女巫的記憶
-        // conversationHistory = [];
-        
-        // 重新初始化卡牌
+    // 自動跳轉到下一頁
+    function autoGoToNextPage(type) {
+        let nextPage = 1; // 預設返回第一頁
+
+        switch(type) {
+            case 'planet':
+                nextPage = 3; // 行星選擇後跳到星座頁
+                break;
+            case 'star':
+                nextPage = 4; // 星座選擇後跳到宮位頁
+                break;
+            case 'house':
+                nextPage = 5; // 宮位選擇後跳到聯繫女巫頁
+                break;
+        }
+
+        // 延遲跳轉，讓用戶看到選中的卡牌
         setTimeout(() => {
-            initializeCards('planet');
-            initializeCards('star');
-            initializeCards('house');
-        }, 500);
+            showPage(nextPage);
+            
+            // 如果是最後一步（宮位選擇），自動開始聯繫女巫
+            if (type === 'house') {
+                setTimeout(() => {
+                    connectToWitch();
+                }, 1000);
+            }
+        }, 1000); // 1秒後自動跳轉
     }
 }); 
