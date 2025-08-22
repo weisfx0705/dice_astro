@@ -130,6 +130,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // 清空聊天界面的內容
                 chatMessages.innerHTML = '';
+                console.log('Enter鍵 - 聊天界面已清空');
                 
                 // 完全重置所有狀態
                 resetAllCards();
@@ -179,6 +180,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // 清空聊天界面的內容
             chatMessages.innerHTML = '';
+            console.log('預設問題按鈕 - 聊天界面已清空');
             
             // 完全重置所有狀態
             resetAllCards();
@@ -704,12 +706,15 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // 顯示聊天界面
             chatContainer.style.display = 'block';
+            console.log('占卜完成 - 聊天界面當前內容數量:', chatMessages.children.length);
             
             // 添加用戶問題到聊天界面
             addMessageToChat('user', `${question}`);
             
             // 添加 AI 回應到聊天界面
             addMessageToChat('witch', reply);
+            
+            console.log('占卜完成 - 添加對話後聊天界面內容數量:', chatMessages.children.length);
             
             // 確保聊天界面一開始顯示在最上方
             chatMessages.scrollTop = 0;
