@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="300" height="300" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+  <rect width="300" height="300" fill="#1a1a4a"/>
+  <circle cx="150" cy="150" r="140" fill="none" stroke="#ffd700" stroke-width="2" opacity="0.5"/>
+  <circle cx="150" cy="150" r="100" fill="none" stroke="#ffd700" stroke-width="2" opacity="0.5"/>
+  
+  <!-- 大型中央星星 -->
+  <polygon points="150,50 165,115 230,115 178,155 195,220 150,180 105,220 122,155 70,115 135,115" fill="#ffd700" opacity="0.8"/>
+  
+  <!-- 小星星1 -->
+  <polygon points="50,50 55,65 70,65 58,75 62,90 50,80 38,90 42,75 30,65 45,65" fill="#ffd700" opacity="0.6"/>
+  
+  <!-- 小星星2 -->
+  <polygon points="250,50 255,65 270,65 258,75 262,90 250,80 238,90 242,75 230,65 245,65" fill="#ffd700" opacity="0.6"/>
+  
+  <!-- 小星星3 -->
+  <polygon points="50,250 55,265 70,265 58,275 62,290 50,280 38,290 42,275 30,265 45,265" fill="#ffd700" opacity="0.6"/>
+  
+  <!-- 小星星4 -->
+  <polygon points="250,250 255,265 270,265 258,275 262,290 250,280 238,290 242,275 230,265 245,265" fill="#ffd700" opacity="0.6"/>
+  
+  <!-- 額外星星 -->
+  <polygon points="100,100 103,108 112,108 105,114 107,122 100,117 93,122 95,114 88,108 97,108" fill="#ffd700" opacity="0.4"/>
+  <polygon points="200,100 203,108 212,108 205,114 207,122 200,117 193,122 195,114 188,108 197,108" fill="#ffd700" opacity="0.4"/>
+  <polygon points="100,200 103,208 112,208 105,214 107,222 100,217 93,222 95,214 88,208 97,208" fill="#ffd700" opacity="0.4"/>
+  <polygon points="200,200 203,208 212,208 205,214 207,222 200,217 193,222 195,214 188,208 197,208" fill="#ffd700" opacity="0.4"/>
+  
+  <!-- 星辰背景 -->
+  <circle cx="75" cy="150" r="2" fill="white" opacity="0.7"/>
+  <circle cx="225" cy="150" r="2" fill="white" opacity="0.7"/>
+  <circle cx="150" cy="75" r="2" fill="white" opacity="0.7"/>
+  <circle cx="150" cy="225" r="2" fill="white" opacity="0.7"/>
+  <circle cx="100" cy="65" r="1" fill="white" opacity="0.5"/>
+  <circle cx="200" cy="65" r="1" fill="white" opacity="0.5"/>
+  <circle cx="100" cy="235" r="1" fill="white" opacity="0.5"/>
+  <circle cx="200" cy="235" r="1" fill="white" opacity="0.5"/>
+  
+  <!-- 裝飾線 -->
+  <path d="M10,150 C50,100 100,50 150,50 C200,50 250,100 290,150 C250,200 200,250 150,250 C100,250 50,200 10,150 Z" fill="none" stroke="#ffd700" stroke-width="1" opacity="0.3"/>
+</svg> 

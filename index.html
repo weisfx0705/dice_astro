@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>占星卡牌占卜</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- 設置按鈕 -->
+        <div class="settings-container">
+            <button id="settings-button" class="settings-button">設置API</button>
+            <div id="settings-panel" class="settings-panel">
+                <div class="api-key-container">
+                    <label for="api-key">OpenAI API Key:</label>
+                    <input type="password" id="api-key" placeholder="輸入您的API Key">
+                    <button id="save-api-key" class="save-button">儲存</button>
+                </div>
+            </div>
+        </div>
+        
+        <h1>占星卡牌占卜</h1>
+        
+        <p class="instructions">從每堆牌中各選擇一張，探索您的命運軌跡</p>
+        
+        <!-- 占卜問題輸入框 -->
+        <div class="question-container">
+            <label for="divination-question">您要占卜的問題：</label>
+            <input type="text" id="divination-question" placeholder="請先輸入您的問題...">
+            <div class="preset-questions">
+                <button class="preset-btn" data-question="我今天的運勢">我今天的運勢</button>
+                <button class="preset-btn" data-question="我的靈魂想告訴我的事">我的靈魂想告訴我的事</button>
+                <button class="reset-button-small" id="reset-button-small">重新抽牌</button>
+            </div>
+        </div>
+        
+        <div class="card-section">
+            <div class="card-pile">
+                <h2>行星</h2>
+                <div class="cards" id="planet-cards"></div>
+                <div class="selected-card" id="selected-planet"></div>
+                <p class="card-name" id="planet-name"></p>
+            </div>
+            
+            <div class="card-pile">
+                <h2>星座</h2>
+                <div class="cards" id="star-cards"></div>
+                <div class="selected-card" id="selected-star"></div>
+                <p class="card-name" id="star-name"></p>
+            </div>
+            
+            <div class="card-pile">
+                <h2>宮位</h2>
+                <div class="cards" id="house-cards"></div>
+                <div class="selected-card" id="selected-house"></div>
+                <p class="card-name" id="house-name"></p>
+            </div>
+        </div>
+        
+        <div class="results" id="results">
+            <h2>占卜結果</h2>
+            <p id="result-text"></p>
+            <p id="witch-connecting" class="witch-connecting">正在聯繫女巫中...</p>
+        </div>
+        
+        <!-- 聊天界面 -->
+        <div class="chat-container" id="chat-container">
+            <div class="chat-messages" id="chat-messages"></div>
+            <div class="chat-input-container">
+                <input type="text" id="chat-input" placeholder="繼續提問...">
+                <button id="send-message" class="send-button">發送</button>
+            </div>
+        </div>
+        
+        <button class="reset-button" id="reset-button">重新抽牌</button>
+        
+        <!-- 頁腳信息 -->
+        <footer class="site-footer">
+            <p>設計：義守大學傳播與設計學院陳嘉暐老師 | 占星知識：雨聲老師｜2025</p>
+        </footer>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html> 
