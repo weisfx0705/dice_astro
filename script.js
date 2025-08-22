@@ -117,21 +117,44 @@ document.addEventListener('DOMContentLoaded', function() {
         if (e.key === 'Enter') {
             const question = this.value.trim();
             if (question) {
-                // 先重置所有狀態
+                console.log('Enter鍵被按下，問題:', question);
+                
+                // 停止所有音效
+                stopWaitingSound();
+                
+                // 隱藏所有界面元素
+                document.getElementById('results').style.display = 'none';
+                document.getElementById('chat-container').style.display = 'none';
+                document.getElementById('reset-button').style.display = 'none';
+                document.getElementById('witch-connecting').style.display = 'none';
+                
+                // 清空聊天界面的內容
+                chatMessages.innerHTML = '';
+                
+                // 完全重置所有狀態
                 resetAllCards();
                 
-                // 保持問題在輸入框中
-                divinationQuestion.value = question;
+                // 重置對話歷史，只保留系統訊息
+                if (conversationHistory.length > 1) {
+                    conversationHistory = conversationHistory.slice(0, 1); // 只保留系統訊息
+                }
                 
-                // 添加視覺反饋
-                this.style.borderColor = '#ffd700';
-                this.style.boxShadow = '0 0 10px rgba(255, 215, 0, 0.5)';
-                
-                // 1秒後恢復原樣
+                // 等待重置完成後再確保問題在輸入框中
                 setTimeout(() => {
-                    this.style.borderColor = '';
-                    this.style.boxShadow = '';
-                }, 1000);
+                    divinationQuestion.value = question;
+                    console.log('Enter - 問題已重新設置為:', question);
+                    console.log('Enter - 輸入框當前值:', divinationQuestion.value);
+                    
+                    // 添加視覺反饋
+                    this.style.borderColor = '#ffd700';
+                    this.style.boxShadow = '0 0 10px rgba(255, 215, 0, 0.5)';
+                    
+                    // 1秒後恢復原樣
+                    setTimeout(() => {
+                        this.style.borderColor = '';
+                        this.style.boxShadow = '';
+                    }, 1000);
+                }, 100);
             }
         }
     });
@@ -143,24 +166,46 @@ document.addEventListener('DOMContentLoaded', function() {
     presetButtons.forEach(button => {
         button.addEventListener('click', function() {
             const question = this.getAttribute('data-question');
+            console.log('預設問題按鈕被點擊:', question);
             
-            // 先重置所有狀態
+            // 停止所有音效
+            stopWaitingSound();
+            
+            // 隱藏所有界面元素
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('chat-container').style.display = 'none';
+            document.getElementById('reset-button').style.display = 'none';
+            document.getElementById('witch-connecting').style.display = 'none';
+            
+            // 清空聊天界面的內容
+            chatMessages.innerHTML = '';
+            
+            // 完全重置所有狀態
             resetAllCards();
             
-            // 填入問題
-            divinationQuestion.value = question;
+            // 重置對話歷史，只保留系統訊息
+            if (conversationHistory.length > 1) {
+                conversationHistory = conversationHistory.slice(0, 1); // 只保留系統訊息
+            }
             
-            // 添加視覺反饋
-            this.style.background = 'rgba(255, 215, 0, 0.2)';
-            this.style.borderColor = '#ffd700';
-            this.style.color = '#ffd700';
-            
-            // 1秒後恢復原樣
+            // 等待重置完成後再填入問題
             setTimeout(() => {
-                this.style.background = '';
-                this.style.borderColor = '';
-                this.style.color = '';
-            }, 1000);
+                divinationQuestion.value = question;
+                console.log('問題已設置為:', question);
+                console.log('輸入框當前值:', divinationQuestion.value);
+                
+                // 添加視覺反饋
+                this.style.background = 'rgba(255, 215, 0, 0.2)';
+                this.style.borderColor = '#ffd700';
+                this.style.color = '#ffd700';
+                
+                // 1秒後恢復原樣
+                setTimeout(() => {
+                    this.style.background = '';
+                    this.style.borderColor = '';
+                    this.style.color = '';
+                }, 1000);
+            }, 100);
         });
     });
 
@@ -464,6 +509,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 顯示結果
     function showResult() {
+        // 確保所有卡牌都已選擇
+        if (!selectedCards.planet || !selectedCards.star || !selectedCards.house) {
+            console.log('卡牌尚未全部選擇，無法顯示結果');
+            return;
+        }
+        
         const planetName = cardData.planet.find(p => p.id === selectedCards.planet).name;
         const starName = cardData.star.find(s => s.id === selectedCards.star).name;
         const houseName = cardData.house.find(h => h.id === selectedCards.house).name;
@@ -492,6 +543,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 處理占卜結果並調用 OpenAI API
     async function processReadingWithAI(planetName, starName, houseName) {
+        // 檢查卡牌組合是否有效
+        if (!planetName || !starName || !houseName) {
+            console.log('卡牌組合無效，取消 API 調用');
+            return;
+        }
+        
         // 檢查是否設置了 API Key
         const apiKey = localStorage.getItem('openai_api_key');
         if (!apiKey) {
@@ -502,6 +559,9 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // 檢查是否有占卜問題
         const question = divinationQuestion.value.trim();
+        console.log('processReadingWithAI - 當前問題:', question);
+        console.log('processReadingWithAI - 卡牌組合:', planetName, starName, houseName);
+        
         if (!question) {
             alert('請輸入您要占卜的問題');
             divinationQuestion.focus();
@@ -525,9 +585,9 @@ document.addEventListener('DOMContentLoaded', function() {
         // 構建發送給 API 的訊息
         const readingResult = `行星：${planetName}\n星座：${starName}\n宮位：${houseName}`;
         
-        // 添加到對話歷史
-        conversationHistory = [
-            {
+        // 如果對話歷史為空，初始化系統訊息
+        if (conversationHistory.length === 0) {
+            conversationHistory.push({
                 role: "system", 
                 content: `configure_astrology_dice_bot --dice=random --style="厭世女巫" --functions="深度解讀, 用非常厭世口吻，給予勸告與警示" --language=traditional_chinese --output_detail="豐富" --tone="多層次" --insights="深入分析" language=traditional_chinese
 
@@ -593,12 +653,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
 總結：
 「哦，土星在你的第二宮，這是個沉重的組合。這意味著你的財務狀況將會受到挑戰，並且需要你嚴格控制開支。處女座的影響進一步強調了這一點，你必須學會制定精細的財務計畫，避免任何衝動消費或投資。這不是一個享受物質生活的時期，而是你需要腳踏實地，專注於長期財務管理的時候。土星不會讓你輕鬆度過，但只要你謹慎行事，未來的財務狀況會有所改善。」`
-            },
-            {
-                role: "user", 
-                content: `用戶問題：${question}\n占卜結果：${readingResult}`
-            }
-        ];
+            });
+        }
+        
+        // 添加用戶問題到對話歷史
+        conversationHistory.push({
+            role: "user", 
+            content: `用戶問題：${question}\n占卜結果：${readingResult}`
+        });
         
         try {
             // 發送請求到 OpenAI API
@@ -829,8 +891,8 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('star-cards').classList.remove('selected');
         document.getElementById('house-cards').classList.remove('selected');
         
-        // 清空對話歷史
-        conversationHistory = [];
+        // 不清空對話歷史，保持女巫的記憶
+        // conversationHistory = [];
         
         // 重新初始化卡牌
         setTimeout(() => {
