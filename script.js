@@ -827,6 +827,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     connectToWitch();
                 }, 1000);
             }
-        }, 1000); // 1秒後自動跳轉
+        }, 1300); // 1.3秒後自動跳轉
     }
 }); 
