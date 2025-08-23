@@ -10,17 +10,7 @@
 </head>
 <body>
     <div class="container">
-        <!-- 設置按鈕 -->
-        <div class="settings-container">
-            <button id="settings-button" class="settings-button">設置API</button>
-            <div id="settings-panel" class="settings-panel">
-                <div class="api-key-container">
-                    <label for="api-key">OpenAI API Key:</label>
-                    <input type="password" id="api-key" placeholder="輸入您的API Key">
-                    <button id="save-api-key" class="save-button">儲存</button>
-                </div>
-            </div>
-        </div>
+
         
         <!-- 頁面1: 問題輸入頁 -->
         <div id="page-1" class="page active">
@@ -47,13 +37,6 @@
             
             <div class="page-layout">
                 <div class="left-panel">
-                    <div class="current-question">
-                        <p>您的問題：<span id="question-display-1"></span></p>
-                        <button id="restart-journey-1" class="restart-button">重新開始</button>
-                    </div>
-                </div>
-                
-                <div class="right-panel">
                     <div class="card-section">
                         <div class="card-pile">
                             <h2>行星</h2>
@@ -61,6 +44,13 @@
                             <div class="selected-card" id="selected-planet"></div>
                             <p class="card-name" id="planet-name"></p>
                         </div>
+                    </div>
+                </div>
+                
+                <div class="right-panel">
+                    <div class="current-question">
+                        <p>您的問題：<span id="question-display-1"></span></p>
+                        <button id="restart-journey-1" class="restart-button">重新開始</button>
                     </div>
                 </div>
             </div>
@@ -73,6 +63,17 @@
             
             <div class="page-layout">
                 <div class="left-panel">
+                    <div class="card-section">
+                        <div class="card-pile">
+                            <h2>星座</h2>
+                            <div class="cards" id="star-cards"></div>
+                            <div class="selected-card" id="selected-star"></div>
+                            <p class="card-name" id="star-name"></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="right-panel">
                     <div class="current-question">
                         <p>您的問題：<span id="question-display-2"></span></p>
                         <button id="restart-journey-2" class="restart-button">重新開始</button>
@@ -88,17 +89,6 @@
                         </div>
                     </div>
                 </div>
-                
-                <div class="right-panel">
-                    <div class="card-section">
-                        <div class="card-pile">
-                            <h2>星座</h2>
-                            <div class="cards" id="star-cards"></div>
-                            <div class="selected-card" id="selected-star"></div>
-                            <p class="card-name" id="star-name"></p>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -109,6 +99,17 @@
             
             <div class="page-layout">
                 <div class="left-panel">
+                    <div class="card-section">
+                        <div class="card-pile">
+                            <h2>宮位</h2>
+                            <div class="cards" id="house-cards"></div>
+                            <div class="selected-card" id="selected-house"></div>
+                            <p class="card-name" id="house-name"></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="right-panel">
                     <div class="current-question">
                         <p>您的問題：<span id="question-display-3"></span></p>
                         <button id="restart-journey-3" class="restart-button">重新開始</button>
@@ -131,17 +132,6 @@
                         </div>
                     </div>
                 </div>
-                
-                <div class="right-panel">
-                    <div class="card-section">
-                        <div class="card-pile">
-                            <h2>宮位</h2>
-                            <div class="cards" id="house-cards"></div>
-                            <div class="selected-card" id="selected-house"></div>
-                            <p class="card-name" id="house-name"></p>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -152,6 +142,20 @@
             
             <div class="page-layout">
                 <div class="left-panel">
+                    <div class="witch-connecting-container">
+                        <div class="witch-connecting" id="witch-connecting">
+                            <div class="witch-icon">🔮</div>
+                            <p>正在聯繫女巫中...</p>
+                            <div class="connecting-dots">
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="right-panel">
                     <div class="current-question">
                         <p>您的問題：<span id="question-display-4"></span></p>
                         <button id="restart-journey-4" class="restart-button">重新開始</button>
@@ -181,20 +185,6 @@
                         </div>
                     </div>
                 </div>
-                
-                <div class="right-panel">
-                    <div class="witch-connecting-container">
-                        <div class="witch-connecting" id="witch-connecting">
-                            <div class="witch-icon">🔮</div>
-                            <p>正在聯繫女巫中...</p>
-                            <div class="connecting-dots">
-                                <span class="dot"></span>
-                                <span class="dot"></span>
-                                <span class="dot"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -205,6 +195,17 @@
             
             <div class="page-layout">
                 <div class="left-panel">
+                    <!-- 聊天界面 -->
+                    <div class="chat-container" id="chat-container">
+                        <div class="chat-messages" id="chat-messages"></div>
+                        <div class="chat-input-container">
+                            <input type="text" id="chat-input" placeholder="繼續提問...">
+                            <button id="send-message" class="send-button">發送</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="right-panel">
                     <div class="current-question">
                         <p>您的問題：<span id="question-display-5"></span></p>
                         <button id="restart-journey-5" class="restart-button">重新開始</button>
@@ -231,17 +232,6 @@
                                 <span class="card-label">宮位：</span>
                                 <span id="house-summary-2"></span>
                             </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="right-panel">
-                    <!-- 聊天界面 -->
-                    <div class="chat-container" id="chat-container">
-                        <div class="chat-messages" id="chat-messages"></div>
-                        <div class="chat-input-container">
-                            <input type="text" id="chat-input" placeholder="繼續提問...">
-                            <button id="send-message" class="send-button">發送</button>
                         </div>
                     </div>
                 </div>

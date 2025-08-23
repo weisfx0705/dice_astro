@@ -81,8 +81,8 @@ h1:hover {
 }
 
 h2 {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
+    font-size: 2.25rem;
+    margin-bottom: 1.5rem;
     color: #e6e6fa;
 }
 
@@ -399,39 +399,41 @@ h2 {
     display: flex;
     justify-content: center;
     margin-bottom: 2rem;
+    flex: 1;
+    align-items: flex-start;
 }
 
 .card-pile {
     margin: 1rem;
-    width: 300px;
+    width: 450px;
     position: relative;
 }
 
 .cards {
     position: relative;
-    height: 280px;
+    height: 420px;
     margin-bottom: 1rem;
     background-color: rgba(26, 26, 74, 0.3);
     border-radius: 15px;
-    padding: 10px;
+    padding: 15px;
     transition: all 0.5s ease;
 }
 
 .card {
-    width: 60px;
-    height: 60px;
+    width: 90px;
+    height: 90px;
     background-color: #1a1a4a;
     background-image: radial-gradient(circle at center, #2a2a6a 0%, #1a1a4a 100%);
     background-size: cover;
     background-position: center;
-    border-radius: 8px;
+    border-radius: 12px;
     position: absolute;
     cursor: pointer;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
     transition: transform 0.3s ease;
     transform-style: preserve-3d;
     backface-visibility: hidden;
-    border: 2px solid #ffd700;
+    border: 3px solid #ffd700;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -440,7 +442,7 @@ h2 {
 .card::before {
     content: "★";
     color: #ffd700;
-    font-size: 24px;
+    font-size: 36px;
     opacity: 0.8;
 }
 
@@ -452,30 +454,30 @@ h2 {
 }
 
 .selected-card {
-    width: 300px;
-    height: 300px;
+    width: 450px;
+    height: 450px;
     position: absolute;
-    top: 40px;
+    top: 60px;
     left: 50%;
     transform: translateX(-50%) scale(0);
-    border-radius: 10px;
+    border-radius: 15px;
     background-size: cover;
     background-position: center;
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.7);
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.7);
     opacity: 0;
     transition: all 0.5s ease;
-    border: 3px solid #ffd700;
+    border: 5px solid #ffd700;
     z-index: 200;
 }
 
 .card-name {
-    height: 3rem;
+    height: 4.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
+    font-size: 1.8rem;
     color: #ffd700;
-    text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+    text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
 }
 
 /* 女巫聯繫頁面樣式 */
@@ -488,13 +490,14 @@ h2 {
     border: 2px solid rgba(255, 215, 0, 0.3);
     border-radius: 15px;
     padding: 2rem;
-    margin: 2rem 0;
+    margin: 0;
     box-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
     position: relative;
     height: 400px;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex: 1;
 }
 
 .witch-connecting-container::before {
@@ -570,7 +573,6 @@ h2 {
 
 /* 聊天界面 */
 .chat-container {
-    margin-top: 2rem;
     background: rgba(26, 26, 74, 0.5);
     background-image: url('witch.png');
     background-size: cover;
@@ -579,13 +581,11 @@ h2 {
     border-radius: 15px;
     padding: 1rem;
     box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
     position: relative;
     height: 600px;
     display: flex;
     flex-direction: column;
+    flex: 1;
 }
 
 .chat-container::before {
@@ -743,7 +743,7 @@ h2 {
     
     .card-pile {
         width: 100%;
-        max-width: 300px;
+        max-width: 450px;
     }
     
     .question-container {
@@ -852,17 +852,22 @@ h2 {
 .page-layout {
     display: flex;
     gap: 2rem;
-    align-items: flex-start;
+    align-items: stretch;
     margin-bottom: 2rem;
 }
 
 .left-panel {
-    flex: 0 0 300px;
+    flex: 7;
     position: sticky;
     top: 2rem;
+    display: flex;
+    flex-direction: column;
 }
 
 .right-panel {
-    flex: 1;
+    flex: 3;
     min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
 } 

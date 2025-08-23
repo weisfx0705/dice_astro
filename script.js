@@ -100,11 +100,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // API Key 相關功能
-    const settingsButton = document.getElementById('settings-button');
-    const settingsPanel = document.getElementById('settings-panel');
-    const saveApiKeyBtn = document.getElementById('save-api-key');
-    const apiKeyInput = document.getElementById('api-key');
+    // API Key 相關功能已移除，改用 Cloudflare Worker 代理
     
     // 聊天相關功能
     const chatContainer = document.getElementById('chat-container');
@@ -367,13 +363,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const starName = cardData.star.find(s => s.id === selectedCards.star).name;
         const houseName = cardData.house.find(h => h.id === selectedCards.house).name;
         
-        // 檢查是否設置了 API Key
-        const apiKey = localStorage.getItem('openai_api_key');
-        if (!apiKey) {
-            alert('請先設置 OpenAI API Key 以獲取詳細解讀');
-            settingsPanel.style.display = 'block';
-            return;
-        }
+        // 不再需要檢查 API Key，使用 Cloudflare Worker 代理
         
         // 播放等待音效
         playWaitingSound();
@@ -417,12 +407,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         
         try {
-            // 發送請求到 OpenAI API
-            const response = await fetch('https://api.openai.com/v1/chat/completions', {
+            // 發送請求到 Cloudflare Worker 代理
+            const response = await fetch('https://openai-proxy.chiawei-studio.workers.dev/v1/chat/completions', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${apiKey}`
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
                     model: "gpt-4o-mini",
@@ -468,27 +457,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // API Key 設置面板顯示/隱藏
-    settingsButton.addEventListener('click', function() {
-        settingsPanel.style.display = settingsPanel.style.display === 'block' ? 'none' : 'block';
-    });
-    
-    // 儲存 API Key
-    saveApiKeyBtn.addEventListener('click', function() {
-        const apiKey = apiKeyInput.value.trim();
-        if (apiKey) {
-            localStorage.setItem('openai_api_key', apiKey);
-            settingsPanel.style.display = 'none';
-            alert('API Key 儲存成功！');
-        } else {
-            alert('請輸入有效的 API Key');
-        }
-    });
-    
-    // 檢查是否已經有儲存的 API Key
-    if (localStorage.getItem('openai_api_key')) {
-        apiKeyInput.value = localStorage.getItem('openai_api_key');
-    }
+    // API Key 相關事件監聽器已移除，改用 Cloudflare Worker 代理
     
     // 聊天功能 - 發送訊息
     sendMessageBtn.addEventListener('click', sendMessage);
@@ -533,12 +502,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 調用 OpenAI API
     async function callOpenAI() {
-        const apiKey = localStorage.getItem('openai_api_key');
-        if (!apiKey) {
-            alert('請先設置 OpenAI API Key');
-            settingsPanel.style.display = 'block';
-            return;
-        }
+        // 不再需要檢查 API Key，使用 Cloudflare Worker 代理
         
         try {
             // 顯示正在處理中的提示
@@ -560,12 +524,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 ...conversationHistory
             ];
             
-            // 發送請求到 OpenAI API
-            const response = await fetch('https://api.openai.com/v1/chat/completions', {
+            // 發送請求到 Cloudflare Worker 代理
+            const response = await fetch('https://openai-proxy.chiawei-studio.workers.dev/v1/chat/completions', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${apiKey}`
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
                     model: "gpt-4o-mini",
@@ -707,15 +670,15 @@ document.addEventListener('DOMContentLoaded', function() {
             const row = Math.floor(i / 4);
             const col = i % 4;
             
-            // 設置卡牌位置，以網格形式排列
+            // 設置卡牌位置，以網格形式排列（調整為1.5倍大小）
             card.style.left = `calc(25% * ${col})`;
-            card.style.top = `calc(80px * ${row})`;
+            card.style.top = `calc(120px * ${row})`;
             card.style.transform = `rotate(${(Math.random() * 10) - 5}deg)`;
             card.style.zIndex = i;
             
-            // 添加簡單的陰影和邊框，使卡牌更容易識別
-            card.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.5)';
-            card.style.border = '2px solid rgba(255, 215, 0, 0.3)';
+            // 添加簡單的陰影和邊框，使卡牌更容易識別（調整為1.5倍大小）
+            card.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.5)';
+            card.style.border = '3px solid rgba(255, 215, 0, 0.3)';
             
             // 點擊事件
             card.addEventListener('click', function() {
