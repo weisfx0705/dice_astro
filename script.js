@@ -790,6 +790,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     connectToWitch();
                 }, 1000);
             }
-        }, 1300); // 1.3秒後自動跳轉
+        }, 1500); // 1.5秒後自動跳轉
     }
 }); 

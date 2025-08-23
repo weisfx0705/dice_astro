@@ -701,6 +701,11 @@ h2 {
 
 /* 響應式設計 */
 @media (max-width: 768px) {
+    /* 重置固定定位元素 */
+    .left-panel,
+    .right-panel {
+        position: static !important;
+    }
     .container {
         padding: 1rem;
     }
@@ -718,6 +723,8 @@ h2 {
         flex: none;
         width: 100%;
         position: static;
+        height: auto;
+        min-height: auto;
     }
     
     .right-panel {
@@ -758,6 +765,37 @@ h2 {
         flex-direction: column;
         align-items: center;
         gap: 10px;
+    }
+    
+    /* 移動設備聊天容器優化 */
+    .chat-container {
+        height: auto;
+        min-height: 400px;
+        max-height: 80vh;
+        position: relative;
+    }
+    
+    .chat-messages {
+        max-height: 300px;
+        min-height: 200px;
+    }
+    
+    /* 確保容器在移動設備上有足夠高度 */
+    .container {
+        min-height: auto;
+        padding: 1rem;
+    }
+    
+    /* 結果區域在移動設備上的優化 */
+    .results {
+        margin: 1rem 0;
+        padding: 1rem;
+    }
+    
+    /* 頁面佈局在移動設備上的調整 */
+    .page-layout {
+        min-height: auto;
+        height: auto;
     }
     
     .preset-btn {
