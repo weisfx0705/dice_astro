@@ -401,12 +401,15 @@ h2 {
     margin-bottom: 2rem;
     flex: 1;
     align-items: flex-start;
+    min-height: 400px;
 }
 
 .card-pile {
     margin: 1rem;
     width: 450px;
     position: relative;
+    display: flex;
+    flex-direction: column;
 }
 
 .cards {
@@ -417,6 +420,8 @@ h2 {
     border-radius: 15px;
     padding: 15px;
     transition: all 0.5s ease;
+    flex: 1;
+    min-height: 350px;
 }
 
 .card {
@@ -498,6 +503,7 @@ h2 {
     align-items: center;
     justify-content: center;
     flex: 1;
+    min-height: 350px;
 }
 
 .witch-connecting-container::before {
@@ -586,6 +592,7 @@ h2 {
     display: flex;
     flex-direction: column;
     flex: 1;
+    min-height: 500px;
 }
 
 .chat-container::before {
@@ -610,6 +617,7 @@ h2 {
     text-align: left;
     position: relative;
     z-index: 2;
+    min-height: 300px;
 }
 
 .chat-message {
@@ -638,6 +646,7 @@ h2 {
     position: relative;
     z-index: 2;
     flex-shrink: 0;
+    margin-top: auto;
 }
 
 .chat-input-container input {
@@ -664,6 +673,7 @@ h2 {
     border-radius: 30px;
     cursor: pointer;
     transition: all 0.3s ease;
+    white-space: nowrap;
 }
 
 .send-button:hover {
@@ -718,10 +728,13 @@ h2 {
         flex: none;
         width: 100%;
         position: static;
+        height: auto;
+        min-height: auto;
     }
     
     .right-panel {
         width: 100%;
+        order: -1; /* 在手機版上，右側面板先顯示 */
     }
     
     .current-question {
@@ -784,6 +797,50 @@ h2 {
     .selected-card-item {
         width: 100%;
         max-width: 300px;
+    }
+    
+    /* 手機版聊天界面優化 */
+    .chat-container {
+        height: 70vh; /* 使用視窗高度的70% */
+        min-height: 400px;
+        max-height: 600px;
+        margin-bottom: 1rem;
+    }
+    
+    .chat-messages {
+        flex: 1;
+        min-height: 300px;
+        max-height: 50vh;
+    }
+    
+    .chat-input-container {
+        margin-top: auto;
+        padding-top: 1rem;
+    }
+    
+    /* 手機版女巫聯繫容器優化 */
+    .witch-connecting-container {
+        height: 60vh;
+        min-height: 350px;
+        max-height: 500px;
+    }
+    
+    /* 手機版卡片區域優化 */
+    .cards {
+        height: 300px;
+        min-height: 250px;
+    }
+    
+    .selected-card {
+        width: 100%;
+        max-width: 350px;
+        height: 350px;
+        top: 40px;
+    }
+    
+    .card-name {
+        height: 3.5rem;
+        font-size: 1.5rem;
     }
 }
 
@@ -870,4 +927,42 @@ h2 {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+}
+
+/* 手機版頁面佈局優化 */
+@media (max-width: 768px) {
+    .page-layout {
+        flex-direction: column;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .left-panel {
+        flex: none;
+        width: 100%;
+        position: static;
+        height: auto;
+        min-height: auto;
+        order: 2; /* 在手機版上，左側面板後顯示 */
+    }
+    
+    .right-panel {
+        width: 100%;
+        order: 1; /* 在手機版上，右側面板先顯示 */
+        margin-bottom: 1rem;
+    }
+    
+    /* 手機版聊天頁面特殊處理 */
+    #page-6 .page-layout {
+        flex-direction: column-reverse; /* 聊天頁面左側面板優先 */
+    }
+    
+    #page-6 .left-panel {
+        order: 1;
+    }
+    
+    #page-6 .right-panel {
+        order: 2;
+        margin-bottom: 0;
+    }
 } 
