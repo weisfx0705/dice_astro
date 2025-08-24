@@ -1,83 +1,144 @@
-# 🔮 厭世占星卡牌
+# Cynical Astrology Card Reading
 
-AI 驅動的互動式占星占卜網站，結合行星、星座、宮位卡牌系統。
+A mystical and interactive web-based astrology card reading experience featuring a wise witch who provides cynical yet insightful readings.
 
-## 🚀 快速使用
+## 🌟 Features
 
-1. **提出問題**：輸入您的占卜問題或選擇預設問題
-2. **選擇卡牌**：依序從行星、星座、宮位三堆卡牌中各選一張
-3. **獲得解讀**：AI 厭世女巫提供詳細占卜結果
-4. **深入對話**：在聊天框中繼續提問，深入探討
+- **Interactive Card Selection**: Choose from three card types: Planets, Zodiac Signs, and Houses
+- **AI-Powered Witch Consultation**: Chat with a mystical witch who provides personalized readings
+- **Beautiful Visual Design**: Stunning cosmic-themed interface with smooth animations
+- **Responsive Design**: Optimized for both desktop and mobile devices
+- **Custom Question Input**: Ask your own specific questions for personalized readings
+- **Preset Questions**: Quick access to common astrology questions
 
-## ✨ 特色功能
+## 🎴 Card Types
 
-- **三重卡牌系統**：行星 + 星座 + 宮位的完整占星組合
-- **AI 智能解讀**：厭世女巫風格的深度占卜分析
-- **流暢動畫效果**：精美的卡牌翻轉與選擇動畫
-- **沉浸音效體驗**：洗牌、選牌、等待音效增強氛圍
-- **響應式設計**：完美支援桌面、平板和手機
-- **連續對話功能**：可與 AI 女巫深入討論占卜結果
-- **即開即用**：無需註冊或設定，直接開始占卜
+### Planets
+- Represents planetary influences and cosmic energies
+- Each planet has unique characteristics and meanings
 
-## 🎴 卡牌系統
+### Zodiac Signs
+- Traditional 12 zodiac signs with their distinct traits
+- Influences personality and life patterns
 
-| 類型 | 數量 | 代表意義 |
-|------|------|----------|
-| 行星 | 12張 | 宇宙能量與影響力（太陽、月亮、水星等） |
-| 星座 | 12張 | 性格特質與傾向（白羊座、金牛座等） |
-| 宮位 | 12張 | 生活領域與重點（第一宮至第十二宮） |
+### Houses
+- Astrological houses representing different life areas
+- From career to relationships to spiritual growth
 
-## 💻 技術架構
+## 🚀 Getting Started
 
-- **前端技術**：HTML5 + CSS3 + JavaScript ES6
-- **動畫引擎**：Anime.js 流暢動畫效果
-- **AI 服務**：整合 OpenAI GPT 模型
-- **響應式框架**：自適應各種螢幕尺寸
-- **音頻處理**：針對移動設備優化的音效系統
-- **雲端代理**：使用 Cloudflare Worker 確保服務穩定
+### Prerequisites
+- Modern web browser (Chrome, Firefox, Safari, Edge)
+- Internet connection for AI chat functionality
 
-## 🎮 使用體驗
+### Installation
+1. Clone or download the project files
+2. Open `index.html` in your web browser
+3. No additional setup required - it's ready to use!
 
-### 占卜流程
-1. 在首頁輸入您的問題或選擇預設問題
-2. 進入行星牌頁面，從 12 張卡牌中選擇一張
-3. 進入星座牌頁面，從 12 張卡牌中選擇一張  
-4. 進入宮位牌頁面，從 12 張卡牌中選擇一張
-5. 系統自動聯繫厭世女巫進行解讀
-6. 在結果頁面查看詳細占卜分析
-7. 可在聊天框中繼續提問
+## 📱 How to Use
 
-### 音效說明
-- **洗牌音效**：選擇卡牌時播放
-- **等待音效**：聯繫女巫時的氛圍音樂
-- **完成音效**：獲得占卜結果時播放
+1. **Ask Your Question**: Enter your specific question or choose from preset options
+2. **Select Cards**: Go through three rounds of card selection:
+   - First: Choose a planet card
+   - Second: Choose a zodiac sign card
+   - Third: Choose a house card
+3. **Connect with the Witch**: Experience the mystical connection process
+4. **Get Your Reading**: Chat with the witch to receive your personalized reading
+5. **Continue the Conversation**: Ask follow-up questions for deeper insights
 
-移動設備用戶首次觸摸螢幕後會看到「🔊 音效已啟用」提示。
+## 🎨 Design Features
 
-## 🌟 特殊功能
+- **Cosmic Theme**: Deep space backgrounds with golden accents
+- **Smooth Animations**: Card flipping, floating effects, and transitions
+- **Responsive Layout**: Adapts seamlessly to different screen sizes
+- **Interactive Elements**: Hover effects and visual feedback
+- **Mystical Atmosphere**: Witch imagery and spiritual symbolism
 
-- **厭世女巫風格**：獨特的占卜解讀風格，深刻而富有洞察力
-- **智能對話系統**：可與 AI 進行多輪對話，深入探討占卜結果
-- **視覺動畫效果**：精心設計的卡牌動畫和過場效果
-- **個人化體驗**：根據選擇的卡牌組合提供專屬解讀
+## 🛠️ Technical Details
 
-## 📱 設備相容性
+- **Frontend**: Pure HTML, CSS, and JavaScript
+- **Animations**: Anime.js library for smooth card animations
+- **Responsive Design**: CSS Grid and Flexbox for layout
+- **No Dependencies**: Lightweight and fast loading
+- **Cross-Platform**: Works on all modern devices and browsers
 
-- **桌面電腦**：Chrome、Firefox、Safari、Edge
-- **平板設備**：iPad、Android 平板
-- **手機設備**：iPhone、Android 手機
-- **最佳體驗**：建議使用 Chrome 瀏覽器
+## 📱 Mobile Experience
 
-## 👥 製作團隊
+- **Touch-Friendly**: Optimized for mobile devices
+- **Responsive Layout**: Adapts to different screen orientations
+- **Optimized Interactions**: Smooth touch gestures and animations
+- **Readable Text**: Proper sizing for mobile screens
 
-- **設計指導**：義守大學傳播與設計學院 陳嘉暐老師  
-- **占星顧問**：雨聲老師  
-- **開發年份**：2025
+## 🎭 User Experience
 
-## 🔗 技術支援
+- **Intuitive Navigation**: Clear step-by-step process
+- **Visual Feedback**: Immediate response to user actions
+- **Engaging Animations**: Keeps users engaged throughout the experience
+- **Personalized Content**: Tailored readings based on user selections
 
-本專案使用現代 Web 技術構建，確保在各種設備上都能提供流暢的使用體驗。如有任何技術問題，請檢查瀏覽器相容性或嘗試重新整理頁面。
+## 🔮 The Witch Experience
+
+- **Mystical Connection**: Animated connection process
+- **AI Chat Interface**: Interactive conversation with the witch
+- **Personalized Readings**: Responses based on your card selections
+- **Continued Dialogue**: Ask follow-up questions for deeper insights
+
+## 🌟 Special Features
+
+- **Card Animations**: Beautiful card flipping and selection effects
+- **Background Music**: Atmospheric sound effects (optional)
+- **Visual Effects**: Glowing elements and cosmic animations
+- **Responsive Design**: Seamless experience across all devices
+
+## 📁 Project Structure
+
+```
+dice_astro/
+├── index.html          # Main application file
+├── style.css           # Styling and responsive design
+├── script.js           # Interactive functionality
+├── planet/             # Planet card images
+├── star/               # Zodiac sign card images
+├── house/              # House card images
+├── sound/              # Audio effects
+├── witch.png           # Witch character image
+└── README.md           # This file
+```
+
+## 🎯 Target Audience
+
+- **Astrology Enthusiasts**: People interested in zodiac and cosmic influences
+- **Spiritual Seekers**: Those looking for mystical guidance
+- **Entertainment Seekers**: Users who enjoy interactive experiences
+- **Mobile Users**: People who prefer mobile-first experiences
+
+## 🌟 Future Enhancements
+
+- **More Card Types**: Additional astrology elements
+- **Advanced AI**: More sophisticated witch responses
+- **User Accounts**: Save reading history
+- **Social Sharing**: Share readings with friends
+- **Multiple Languages**: International language support
+
+## 🤝 Contributing
+
+This project is designed and developed by the Department of Communication and Design at I-Shou University. Contributions and suggestions are welcome!
+
+## 📄 License
+
+This project is created for educational and entertainment purposes.
+
+## 👨‍🏫 Credits
+
+- **Design**: Professor Chen Jia-Wei, Department of Communication and Design, I-Shou University
+- **Astrology Knowledge**: Teacher Yu Sheng
+- **Year**: 2025
+
+## 🌟 Experience the Magic
+
+Embark on a mystical journey through the cosmos with our Cynical Astrology Card Reading. Discover what the stars have in store for you through an interactive experience that combines traditional astrology with modern web technology.
 
 ---
 
-*讓星辰指引您的道路，聆聽宇宙的厭世智慧 ✨*
+*May the stars guide your path and the witch share her wisdom with you.* ✨🔮
