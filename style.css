@@ -943,18 +943,18 @@ h2 {
         position: static;
         height: auto;
         min-height: auto;
-        order: 2; /* 在手機版上，左側面板後顯示 */
+        order: 1; /* 在手機版上，左側面板先顯示（在上面） */
     }
     
     .right-panel {
         width: 100%;
-        order: 1; /* 在手機版上，右側面板先顯示 */
-        margin-bottom: 1rem;
+        order: 2; /* 在手機版上，右側面板後顯示（在下面） */
+        margin-bottom: 0;
     }
     
-    /* 手機版聊天頁面特殊處理 */
+    /* 手機版聊天頁面特殊處理 - 保持左側面板在上面的順序 */
     #page-6 .page-layout {
-        flex-direction: column-reverse; /* 聊天頁面左側面板優先 */
+        flex-direction: column; /* 聊天頁面也保持左側面板在上面 */
     }
     
     #page-6 .left-panel {
