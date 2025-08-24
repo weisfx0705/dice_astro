@@ -383,7 +383,7 @@ document.addEventListener('DOMContentLoaded', function() {
 用戶：我應該接受這份工作機會嗎？
 
 女巫：
-「啊，又是工作問題。好吧，看看骰子怎麼說…」
+「啊，又是工作問題。好吧，看看宇宙怎麼說…」
 你抽到的數字是：
 行星：6號
 星座：10號
@@ -790,6 +790,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     connectToWitch();
                 }, 1000);
             }
-        }, 1500); // 1.5秒後自動跳轉
+        }, 1300); // 1.3秒後自動跳轉
     }
 }); 
