@@ -467,6 +467,23 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
+    // QR Code 功能
+    const generateQrBtn = document.getElementById('generate-qr');
+    const qrModal = document.getElementById('qr-modal');
+    const closeQrModal = document.getElementById('close-qr-modal');
+    const downloadQrBtn = document.getElementById('download-qr');
+    
+    generateQrBtn.addEventListener('click', generateQRCode);
+    closeQrModal.addEventListener('click', closeQRModal);
+    downloadQrBtn.addEventListener('click', downloadQRCode);
+    
+    // 點擊彈出視窗外部關閉
+    window.addEventListener('click', function(event) {
+        if (event.target === qrModal) {
+            closeQRModal();
+        }
+    });
+    
     function sendMessage() {
         const messageText = chatInput.value.trim();
         if (!messageText) return;
@@ -791,5 +808,64 @@ document.addEventListener('DOMContentLoaded', function() {
                 }, 1000);
             }
         }, 1500); // 1.5秒後自動跳轉
+    }
+    
+    // QR Code 相關函數
+    function generateQRCode() {
+        // 收集所有相關數據
+        const question = document.getElementById('divination-question').value.trim();
+        const planetName = selectedCards.planet ? cardData.planet.find(p => p.id === selectedCards.planet).name : '';
+        const starName = selectedCards.star ? cardData.star.find(s => s.id === selectedCards.star).name : '';
+        const houseName = selectedCards.house ? cardData.house.find(h => h.id === selectedCards.house).name : '';
+        
+        // 構建QR Code數據
+        const qrData = {
+            timestamp: new Date().toLocaleString('zh-TW'),
+            question: question,
+            cards: {
+                planet: { id: selectedCards.planet, name: planetName },
+                star: { id: selectedCards.star, name: starName },
+                house: { id: selectedCards.house, name: houseName }
+            },
+            conversation: conversationHistory
+        };
+        
+        // 更新彈出視窗中的信息
+        document.getElementById('qr-question').textContent = question || '未輸入問題';
+        document.getElementById('qr-planet').textContent = planetName || '未選擇';
+        document.getElementById('qr-star').textContent = starName || '未選擇';
+        document.getElementById('qr-house').textContent = houseName || '未選擇';
+        
+        // 清空之前的QR Code
+        const qrContainer = document.getElementById('qr-code-container');
+        qrContainer.innerHTML = '';
+        
+        // 生成新的QR Code
+        const qr = new QRCode(qrContainer, {
+            text: JSON.stringify(qrData),
+            width: 200,
+            height: 200,
+            colorDark: '#1a1a4a',
+            colorLight: '#ffffff',
+            correctLevel: QRCode.CorrectLevel.H
+        });
+        
+        // 顯示彈出視窗
+        qrModal.style.display = 'block';
+    }
+    
+    function closeQRModal() {
+        qrModal.style.display = 'none';
+    }
+    
+    function downloadQRCode() {
+        const qrImage = document.querySelector('#qr-code-container img');
+        if (qrImage) {
+            // 創建下載鏈接
+            const link = document.createElement('a');
+            link.download = `占星結果_${new Date().toISOString().slice(0, 10)}.png`;
+            link.href = qrImage.src;
+            link.click();
+        }
     }
 }); 
