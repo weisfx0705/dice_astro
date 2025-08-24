@@ -7,7 +7,6 @@
     <title>厭世占星卡牌</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -202,7 +201,6 @@
                         <div class="chat-input-container">
                             <input type="text" id="chat-input" placeholder="繼續提問...">
                             <button id="send-message" class="send-button">發送</button>
-                            <button id="generate-qr" class="qr-button">生成QR</button>
                         </div>
                     </div>
                 </div>
@@ -236,26 +234,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- QR Code 彈出視窗 -->
-        <div id="qr-modal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3>占星結果 QR Code</h3>
-                    <span class="close" id="close-qr-modal">&times;</span>
-                </div>
-                <div class="modal-body">
-                    <div id="qr-code-container"></div>
-                    <div class="qr-info">
-                        <p><strong>問題：</strong><span id="qr-question"></span></p>
-                        <p><strong>行星：</strong><span id="qr-planet"></span></p>
-                        <p><strong>星座：</strong><span id="qr-star"></span></p>
-                        <p><strong>宮位：</strong><span id="qr-house"></span></p>
-                    </div>
-                    <button id="download-qr" class="download-button">下載 QR Code</button>
                 </div>
             </div>
         </div>
